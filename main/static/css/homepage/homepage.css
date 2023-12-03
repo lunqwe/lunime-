@@ -1,0 +1,215 @@
+.caption {
+    position: absolute;
+    bottom: 0;
+    left: 5;
+    color: #fff; /* Цвет текста */
+    font-size: 16px !important;
+    font-weight: bold;
+    padding: 25px; /* Внутренний отступ */
+}
+
+.thumbnail {
+    position: relative;
+    overflow: hidden;
+}
+
+.thumbnail img {
+    width: 305px;
+    height: 325px;
+}
+
+.thumbnail::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    height: 365px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+}
+
+
+.list-block ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.list-block li {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between; /* Добавленный стиль для выравнивания по горизонтали */
+    align-items: center; /* Выравнивание по вертикали */
+}
+
+.list-block li a {
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.list-block li a.btn.btn-secondary {
+  font-size: 15px; /* Замените 16px на желаемый размер шрифта */
+  width: 100%; /* Замените 120px на желаемую ширину кнопки */
+  height: 26px; /* Замените 40px на желаемую высоту кнопки */
+  /* Другие стили здесь */
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-block li p {
+    font-size: 15px;
+    margin: 0;
+}
+
+.list-block li .text-block {
+    display: flex;
+    flex-direction: column; /* Стиль для выравнивания элементов текста в столбец */
+    align-items: flex-end; /* Стиль для выравнивания по вертикали в конец */
+    margin-left: auto;
+}
+
+.list-image {
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.list-image-rounded {
+    width: 100%;
+    height: auto;
+}
+
+.list-block li:last-child {
+    border-bottom: none;
+}
+
+.list-block li:nth-child(odd) {
+    background-color: #F0F0F0;
+}
+
+/* Стили для картинки */
+.new-list-image {
+  text-align: center; /* Центрирование изображения */
+}
+
+.new-list-image img.new-list-image-rounded {
+  border-radius: 50%; /* Закругление углов изображения */
+  max-width: 100%; /* Максимальная ширина изображения по родительскому контейнеру */
+  height: auto; /* Сохранение пропорций изображения */
+}
+
+/* Стили для основного текста */
+a {
+  text-decoration: none; /* Убираем подчеркивание для ссылки */
+  color: #333; /* Цвет текста для ссылки */
+}
+
+.updates-text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.text-block {
+  margin-top: 11px;
+}
+
+.description-text {
+  font-size: 14px;
+  font-style: italic;
+}
+
+  
+.news-text-main {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.news-text-additional {
+  font-weight: normal;
+}
+
+.text-additional {
+  font-weight: normal;
+}
+
+.narrow-container {
+  width: 650px;
+  height: 150px;
+}
+
+.anime-description {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 1000px;
+  height: 410px;
+}
+
+.main-container {
+  width: 1000px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.anime-container {
+  display: flex;
+  margin-top: 50px;
+  margin-bottom: 0; /* Добавьте эту строку */
+}
+
+.anime-image {
+  flex: 0 0 auto; /* Измените это */
+  margin-right: 20px;
+}
+
+.anime-image img {
+  width: 305px;
+  height: 410px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.anime-description {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 1000px;
+  height: auto;
+  margin-bottom: 30px;
+}
+
+.description {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 1000px;
+  height: auto;
+}
+
+.anime-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.anime-info {
+  font-size: 16px;
+  color: #000000;
+}

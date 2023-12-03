@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ genre.name }}{% endblock title %}
+{% block css %}<link rel="stylesheet" href="{% static "css/catalog/genres.css" %}" type="text/css"/>{% endblock css %}
+{% block content %}
+<div class="catalog-block">
+    <h1 class="display-1" style="margin-left: 10px"> Аниме жанра "{{ genre.name }}"</h1>
+    <ul class="products">
+        {% for anime in anime_list %}
+        <li class="genre">
+            <a href='anime/{{ anime.id }}'>
+                <div class="thumbnail">
+                    <img src="{{ anime.image.url }}">
+                </div>
+                <div class="caption">
+                    <p>{{ anime.title|slice:":30" }}{% if anime.title|length > 30 %}...{% endif %}</p>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

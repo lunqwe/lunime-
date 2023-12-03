@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Регистрация {% endblock title %}
+{% block css %} <link rel="stylesheet" href="{% static "css/registration/registration.css" %}" type="text/css"/> {% endblock css %}
+{% block content %}
+<div class="login-container">
+    <div class="left">
+      <div class="login">Регистрация</div>
+      <div class="eula" style="margin-top: 350px">Уже есть аккаунт? Войдите <a href='{% url "login" %}'>здесь!</a></div>
+    </div>
+    <div class="right">
+      <div class="form">
+        <form method="post" action="{% url 'signup' %}">
+          {% csrf_token %}
+          <label for="username" class="form-label">Имя пользователя:</label>
+          <input type="text" id="username" name="username" class="form-control" style='background-color: #29292c; color: white;'>
+          <label for="email" class="form-label">Адрес электронной почты:</label>
+          <input type="email" id="email" name="email" class="form-control" style='background-color: #29292c; color: white;'>
+          <label for="password1" class="form-label">Пароль:</label>
+          <input type="password" id="password1" name="password1"class="form-control" style='background-color: #29292c; color: white;'>
+          <label for="password2" class="form-label">Повторите пароль:</label>
+          <input type="password" id="password2" name="password2" class="form-control" style='background-color: #29292c; color: white;'>
+          <input type="submit" id="submit" class="btn btn-secondary" value="Зарегистрироваться" style='margin-bottom: 40px; border: 1px solid #ddd;'>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock content %}

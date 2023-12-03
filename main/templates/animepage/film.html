@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{ anime.title }} {% endblock title %}
+{% block css %}<link rel="stylesheet" href="{% static "css/animepage/animepage.css" %}" type="text/css"/>{% endblock css %}
+{% block content %}
+<div class="main-container">
+    <div class="anime-container">
+        <div class="anime-image">
+            <img src="{{ anime.image.url }}">
+        </div>
+        <div class="anime-description">
+            <div class="anime-title">{{ anime.title }}</div>
+            {% for additional_name in additional_names %}
+            <p class="anime-info text-muted" style='font-size: 13px;'>{{ additional_name.title_name }}</p>
+            {% endfor %}
+            <div class="anime-info">
+                <p><strong>Тип: </strong>{{ anime.anime_type }}</p>
+                <p><strong>Жанр: </strong>{% for genre in anime.genres.all %} <a href='/catalog/genre/{{ genre.id }}'>{{ genre.name }}</a> / {% endfor %}</p>
+                <p><strong>Выпуск: </strong>{{anime.date_published}}</p>
+                <p><strong>Первоисточник: </strong> {{anime.origin_source }}</p>
+                <p><strong>Студия: </strong>{{ anime.studio }}</p>
+                <p><strong>Длительность: </strong> {{ anime.duration }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="description" style="margin-top: 30px;">
+        <div class="anime-title" >Описание</div>
+        <div class="anime-info">
+            <p>{{ anime.description }}</p>
+        </div>
+    </div>
+    <div class="description" style="margin-top: 30px; background-color: #29292c">
+        <div class="anime-title" style='color: white'>Смотреть онлайн</div>
+        <div id="container">
+            <div id="playerContainer">
+                <iframe id="myIframe" src="{{ anime.link }}" width=840 height=515 frameborder="0" allowfullscreen></iframe>
+            </div>
+        
+            <div id="buttonsContainer" style='margin-left: 10px'>
+                <div class="anime-info" style='color: white;'>
+                    <p>Плеер</p>
+                </div>
+                {% if anime.anilibria_link == "0" %}
+                <button type="button" style='background-color: black; color: white' title="Плеер Kodik, есть возможность выбора озвучки" class="btn btn-secondary" onclick="switchIframeSource('//kodik.info/seria/595021/e75505bc0445f2b51dfd80c3aa2b052a/720p', true)">Kodik</button>
+                {% else %}
+                <button type="button" style='background-color: black; color: white' title="Плеер Kodik, есть возможность выбора озвучки" class="btn btn-secondary" onclick="switchIframeSource('//kodik.info/seria/595021/e75505bc0445f2b51dfd80c3aa2b052a/720p', true)">Kodik</button>
+                <button type="button" style='background-color: black; color: white' title="Плеер Anilibria, есть возможность менять серии, озвучка от Anilibria" class="btn btn-secondary" onclick="switchIframeSource('{{ anime.anilibria_link }}', false)">Anilibria</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="description" style="margin-top: 30px">
+        <div class="anime-title">Коментарии</div>
+        <div class="anime-info">
+            <p>123</p>
+        </div>
+    </div>
+    
+    <script>
+        function switchIframeSource(newSrc, showSeriesSelect) {
+            var iframe = document.getElementById("myIframe");
+            iframe.src = newSrc;
+    
+            var selectSeriesDiv = document.getElementById("selectSeries");
+            selectSeriesDiv.style.display = showSeriesSelect ? "block" : "none";
+        }
+    
+        function changeSeries(selectedSeries) {
+            switchIframeSource(selectedSeries, true);
+        }
+    </script>
+{% endblock content %}

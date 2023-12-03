@@ -1,0 +1,73 @@
+.catalog-block {
+    width: 1145px;
+    height: 325px;
+    padding: 10px;
+}
+
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+}
+
+.genre {
+    padding: 5px;
+    margin-right: 3px;
+    position: relative;
+
+}
+.thumbnail {
+    position: relative;
+    overflow: hidden;
+    }
+
+.genre-button {
+    margin-top: 5px;
+    width: 50px;
+    border-right: 1px solid #eee;
+    padding: 5px;
+    margin-right: 5px;
+    background-color: rgb(155, 154, 154);
+    height: 243px;
+}
+.genre-button-text {
+    display: flex;
+    justify-content: center; /* Горизонтальное выравнивание по центру */
+    align-items: center; /* Вертикальное выравнивание по центру */
+    height: 100%; /* Устанавливаем высоту блока на 100%, чтобы выравнивание работало по вертикали */
+    color: white;
+    font-size: 30px;
+}
+
+/* Убираем правую границу у последнего товара в списке */
+.genre .genre:last-child {
+    border-right: none;
+}
+
+.caption {
+    bottom: 10px;
+    left: 5;
+    width: 100%;
+    color: #fff;
+    font-size: 20px !important;
+    padding: 10px; /* Добавим отступы для текста */
+    box-sizing: border-box;
+    position: absolute;
+}
+
+.thumbnail img {
+    width: 250px;
+    height: 357px;
+}
+
+.thumbnail::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    height: 365px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
+}

@@ -1,0 +1,157 @@
+@import url('https://rsms.me/inter/inter-ui.css');
+
+::selection {
+  background: #2d2d30;
+}
+
+::-webkit-selection {
+  background: #2d2d30;
+}
+
+::-moz-selection {
+  background: #2d2d30;
+}
+
+body {
+  background: white;
+  font-family: 'Inter UI', sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.page {
+  background: #e2e2e5;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 40px);
+  position: absolute;
+  place-content: center;
+  width: calc(100% - 40px);
+}
+
+@media (max-width: 767px) {
+  .page {
+    height: auto;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+.login-container {
+    display: flex;
+    max-height: 100%;
+    margin: 0 auto;
+    max-width: 800px;
+  }
+  
+.left {
+    background: white;
+    position: relative;
+    width: 60%;
+  }
+
+@media (max-width: 767px) {
+  .login-container {
+    flex-direction: column;
+    height: auto;
+    width: calc(100% - 40px);
+  }
+}
+
+
+@media (max-width: 767px) {
+  .left {
+    height: auto;
+    max-height: none;
+    width: calc(100% - 40px);
+  }
+}
+
+.login {
+  font-size: 50px;
+  font-weight: 900;
+  margin: 50px 40px 40px;
+}
+
+.eula {
+  color: #999;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 40px;
+}
+
+.right {
+  background: #2d2d30;
+  box-shadow: 0px 0px 40px 16px rgba(0, 0, 0, 0.22);
+  color: #F1F1F2;
+  position: relative;
+  width: 40%; /* Уменьшена ширина блока с данными */
+  height: 530px;
+}
+
+@media (max-width: 767px) {
+  .right {
+    flex-shrink: 0;
+    height: auto;
+    width: 100%;
+    max-height: none;
+  }
+}
+
+svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+path {
+  fill: none;
+  stroke: url(#linearGradient);
+  stroke-width: 4;
+  stroke-dasharray: 240 1386;
+}
+
+.form {
+  margin: 40px;
+  position: absolute;
+  width: calc(100% - 80px);
+}
+
+label {
+  color: #c2c2c5;
+  display: block;
+  font-size: 14px;
+  height: 16px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+/* Убрана фиксированная высота для input, добавлено отступы */
+input {
+  background: transparent;
+  border: 0;
+  color: #f2f2f2;
+  font-size: 20px;
+  line-height: 30px;
+  outline: none !important;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+input::-moz-focus-inner {
+  border: 0;
+}
+
+#submit {
+  color: white;
+  margin-top: 40px;
+  transition: color 300ms;
+}
+
+#submit:focus {
+  color: #f2f2f2;
+}
+
+#submit:active {
+  color: #d0d0d2;
+}

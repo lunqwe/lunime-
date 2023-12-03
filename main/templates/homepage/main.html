@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Главная{% endblock title %}
+{% block content %}
+{% block css %} <link rel="stylesheet" href="{% static "css/homepage/homepage.css" %}" type="text/css" />{% endblock css %}
+<div class='container' style='background-color: white;'>
+    <div class="row anime-description" style='margin-left: 1px'>
+        <a href='/'>
+            <h1 class="display-1" style="margin-left: 10px; margin-bottom: 20px">Новинки сезона</h1>
+        </a>
+        <div class="anime-container">
+            <div class="col-md-3">
+                <a href='/anime/2'>
+                    <div class="thumbnail">
+                        <img src="{% static "images/ghoul.jpg" %}" alt="Товар 1">
+                    </div>
+                    <div class="caption">
+                        {% comment %} {{ anime.title|slice:":30" }}{% if anime.description|length > 30 %}...{% endif %}  {% endcomment %}
+                        <p>Токийский Гуль</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href='/'>
+                    <div class="thumbnail">
+                        <img src="{% static "images/berserk.jpg" %}" alt="Товар 1">
+                    </div>
+                    <div class="caption">
+                        <p>Берсерк</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href='/anime/1'>
+                    <div class="thumbnail">
+                        <img src="{% static "images/jutsu.jpg" %}" alt="Товар 1">
+                    </div>
+                    <div class="caption">
+                        <p>Магическая битва 2</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href='/'>
+                    <div class="thumbnail">
+                        <img src="{% static "images/hunter.jpg" %}" alt="Товар 1">
+                    </div>
+                    <div class="caption">
+                        <p>Хантер х Хантер</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="anime-container">
+        <div class="anime-description">
+            <a href='/'>
+                <h1 class="display-1">Недавно вышло</h1>
+            </a>
+            <div class="list-block" style="margin-bottom: 5px;">
+                <ul>
+                    {% for anime in novelty_list %}
+                    <li>
+                        {% if anime.temp_type == 'Film'%}
+                            <a href='anime/film/{{ anime.id }}' class="d-flex align-items-start">
+                        {% else %}
+                            <a href='anime/{{ anime.id }}' class="d-flex align-items-start">
+                        {% endif %}
+                            <div class="mr-3"> 
+                                <img alt="" src="{{ anime.image.url }}" style="width: 70px; height: 96px;">
+                            </div>
+                            <div style='margin-left: 20px'>
+                                <p class="news-text-main" style='margin-bottom: 5px'>{{ anime.title }}</p>
+                                <p class="news-text-additional text-muted">{{ anime.anime_type }}</p>
+                        {% if anime.temp_type == "Anime" %}
+                                <p class="news-text-additional text-muted">Количество серий: {{ anime.amount_of_episodes }}</p>
+                        {% endif %}
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+<div class="anime-description">
+    <a href='/'>
+        <h2>Новые аниме на сайте</h2>
+    </a>
+    {% for anime in anime_list %}
+            <div style="display: flex; align-items: flex-start; margin-bottom: 30px;">
+                <img class="thumbnail" style="margin-top: 10px; margin-left: 10px;" alt="" src="{{ anime.image.url }}" width=165 height=235>
+                <div class="updates-text" style="margin-left: 15px; margin-top: 10px">
+                    {% if anime.temp_type == "Film" %}
+                        <a href='anime/film/{{ anime.id }}'>
+                            <p style="margin: 0; font-size: 20px">{{ anime.title }}</p>
+                        </a>
+                    {% else %}
+                        <a href='anime/{{ anime.id }}'>
+                            <p style="margin: 0; font-size: 20px">{{ anime.title }}</p>
+                        </a>
+                    {% endif %}
+                    <p class="news-text-additional" style='margin-top: 10px; font-size: 15px'>{% for genre in anime.genres.all %} <a href='/catalog/genre/{{ genre.id }}'>{{ genre.name }}</a> / {% endfor %}</p>
+                    <div class="container-fixed narrow-container">
+                        <p class="news-text-additional" style="margin-top: 30px; font-size: 15px">{{ anime.description|slice:":550" }}{% if anime.description|length > 550 %}...{% endif %} </p>
+                    </div>
+                </div>
+            </div>
+    {% endfor %}
+</div>
+
+
+{% endblock content %}
