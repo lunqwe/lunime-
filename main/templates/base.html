@@ -38,8 +38,13 @@
               </div>
               </li>
               <li>
-                <button class="btn btn-seconday" onclick="window.location.href='/user/'" style="color: white; margin-top: 15px; background-color: #2e2e2e; height: 45px; width: 85px; font-weight: bold;">
-                  <img src="{% static "images\user-profile-icon.png" %}" alt="profile-icon" width=30 height=30>
+                <button class="btn btn-seconday" onclick="window.location.href='/user/'" style="color: white; margin-top: 15px; background-color: #2e2e2e; height: 45px; width: 150px; font-weight: bold;">
+                  <li>
+                    <p> {{ user.username }} </p>
+                  </li>
+                  <li>
+                    <img src="{{ user.profile_pic.url }}" alt="profile-icon" width=30 height=30 style='border-radius: 50%;'>
+                  </li>
                 </button>
               </li>
               <li class='btn-li'><a class='Btn-a' href='/logout' style=""> <button class="Btn">
@@ -50,7 +55,7 @@
               </button></a></li>
             {% else %}
               <li>
-                <div class="main-container" style='margin-top: 15px; margin-right: 10px'>
+                <div class="main-container" style='margin-top: 15px;'>
                   <input checked="" class="checkbox" type="checkbox"> 
                   <div class="mainbox">
                       <div class="iconContainer">

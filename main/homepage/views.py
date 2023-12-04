@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView
+from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
@@ -7,14 +8,9 @@ from animepage.models import Anime, AdditionalName, Film
 from django.utils import timezone
 from itertools import chain
 from operator import attrgetter
+from user_page.models import CustomUser
+from user_page.forms import CustomUserCreationForm
 
-class CustomLoginView(LoginView):
-    template_name = 'registration/login.html'
-    
-class SignupView(generic.CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('/')
-    template_name = 'registration/registration.html'
 
 def insertion_sort(objects):
     for i in range(1, len(objects)):

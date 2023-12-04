@@ -168,6 +168,5 @@ MESSAGE_TAGS = {
 }
 
 # sessions
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 AUTH_USER_MODEL = 'user_page.CustomUser'

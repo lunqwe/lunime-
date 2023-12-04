@@ -1,1 +1,26 @@
 {% extends "base.html" %}
+{% load static %} 
+{% block title %} Вход {% endblock title %}
+{% block css %}<link rel="stylesheet" href="{% static "css/registration/login.css" %}" type="text/css"/>{% endblock css %}
+{% block content %}
+  <center>
+    <div class="container">
+        <div class="card">
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <a class="login">Вход</a>
+                <div class="inputBox" style='margin-top: 30px'>
+                    {{ form.username }}
+                    <span class="user">Имя пользователя</span>
+                </div>
+                <div class="inputBox" style='margin-top: 30px'>
+                    {{ form.password }}
+                    <span>Пароль</span>
+                </div>
+                <button type="submit" class="enter" style='margin-top: 30px'>Вход</button>
+            </form>
+            <p> Нету аккаунта? Создайте <a href='/signup/'>тут</a>!
+        </div>
+    </div>
+  </center>
+{% endblock content %}

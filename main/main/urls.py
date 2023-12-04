@@ -18,8 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from homepage.views import CustomLoginView, SignupView
 from django.contrib.auth.views import LogoutView
+from user_page.views import CustomLoginView, SignupView
 
 urlpatterns = [
     path('', include('homepage.urls')),

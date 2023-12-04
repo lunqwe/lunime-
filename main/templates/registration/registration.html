@@ -3,26 +3,57 @@
 {% block title %} Регистрация {% endblock title %}
 {% block css %} <link rel="stylesheet" href="{% static "css/registration/registration.css" %}" type="text/css"/> {% endblock css %}
 {% block content %}
-<div class="login-container">
-    <div class="left">
-      <div class="login">Регистрация</div>
-      <div class="eula" style="margin-top: 350px">Уже есть аккаунт? Войдите <a href='{% url "login" %}'>здесь!</a></div>
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<center>
+  <div class="container">
+    <div class="card">
+      <form method="post" action="{% url 'signup' %}">
+        {% csrf_token %}
+        <a class="signup" style='margin-top: 30px'>Регистрация</a>
+        
+        <div class="inputBox1" style='margin-top: 30px'>
+          {{ form.username }}
+          <span class="user">Имя пользователя</span>
+          {% for error in form.username.errors %}
+            <p class="text-danger">{{ error }}</p>
+          {% endfor %}  
+        </div>
+        
+        <div class="inputBox" style='margin-top: 30px'>
+          {{ form.email }}
+          <span class="user">Электронная почта</span>  
+          {% for error in form.email.errors %}
+            <p class="text-danger">{{ error }}</p>
+          {% endfor %}  
+        </div>
+        
+        <div class="inputBox" style='margin-top: 30px'>
+          {{ form.password1 }}
+          <span class="user">Пароль</span> 
+          {% for error in form.password1.errors %}
+            <p class="text-danger">{{ error }}</p>
+          {% endfor %}  
+        </div>
+        
+        <div class="inputBox" style='margin-top: 30px'>
+          {{ form.password2 }}
+          <span class="user">Подтвердите пароль</span>
+          {% for error in form.password2.errors %}
+            <p class="text-danger">{{ error }}</p>
+          {% endfor %} 
+        </div>
+        
+        <button type="submit" class="enter" style='margin-top: 20px'>Регистрация</button>
+      </form>
+      <p style='margin-bottom: 20px'> Уже есть аккаунт? Войдите <a href='/login/'>тут</a>!
     </div>
-    <div class="right">
-      <div class="form">
-        <form method="post" action="{% url 'signup' %}">
-          {% csrf_token %}
-          <label for="username" class="form-label">Имя пользователя:</label>
-          <input type="text" id="username" name="username" class="form-control" style='background-color: #29292c; color: white;'>
-          <label for="email" class="form-label">Адрес электронной почты:</label>
-          <input type="email" id="email" name="email" class="form-control" style='background-color: #29292c; color: white;'>
-          <label for="password1" class="form-label">Пароль:</label>
-          <input type="password" id="password1" name="password1"class="form-control" style='background-color: #29292c; color: white;'>
-          <label for="password2" class="form-label">Повторите пароль:</label>
-          <input type="password" id="password2" name="password2" class="form-control" style='background-color: #29292c; color: white;'>
-          <input type="submit" id="submit" class="btn btn-secondary" value="Зарегистрироваться" style='margin-bottom: 40px; border: 1px solid #ddd;'>
-        </form>
-      </div>
-    </div>
-</div>
+  </div>
+</center>
+
 {% endblock content %}

@@ -1,144 +1,93 @@
-@import url('https://rsms.me/inter/inter-ui.css');
-
-::selection {
-  background: #2d2d30;
-}
-
-::-webkit-selection {
-  background: #2d2d30;
-}
-
-::-moz-selection {
-  background: #2d2d30;
-}
-
-body {
-  background: white;
-  font-family: 'Inter UI', sans-serif;
-  margin: 0;
-  padding: 20px;
-}
-
-.page {
-  display: flex;
-  flex-direction: column;
-  place-content: center;
-}
-
-.login-container {
-  display: flex;
-  height: 320px;
-  max-width: 640px; /* Максимальная ширина для .login-container */
-  margin: 0 auto; /* Центрирование .login-container */
-}
-
-@media (max-width: 767px) {
-  .login-container {
-    flex-direction: column;
-    height: auto;
-    max-height: 630px; /* Максимальная высота для .login-container на мобильных устройствах */
-    width: 320px;
-  }
-}
-
-.left {
-  background: white;
-  height: 100%;
-  position: relative;
-  width: 50%;
-}
-
-@media (max-width: 767px) {
-  .left {
-    height: auto;
-    width: 100%;
-    max-height: 270px;
-  }
-}
-
 .login {
-  font-size: 50px;
-  font-weight: 900;
-  margin: 50px 40px 40px;
-}
-
-.eula {
-  color: #999;
-  font-size: 14px;
-  line-height: 1.5;
-  margin: 40px;
-  width: 500px;
-}
-
-.right {
-  background: #2d2d30;
-  box-shadow: 0px 0px 40px 16px rgba(0, 0, 0, 0.22);
-  color: #F1F1F2;
-  position: relative;
-  width: 50%;
-}
-
-@media (max-width: 767px) {
-  .right {
-    flex-shrink: 0;
-    height: 100%;
-    width: 100%;
-    max-height: 350px;
-  }
-}
-
-svg {
-  position: absolute;
-  width: 320px;
-}
-
-path {
-  fill: none;
-  stroke: url(#linearGradient);
-  stroke-width: 4;
-  stroke-dasharray: 240 1386;
-}
-
-.form {
-  margin: 40px;
-  position: absolute;
-}
-
-label {
-  color: #c2c2c5;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   display: block;
-  font-size: 14px;
-  height: 16px;
-  margin-top: 20px;
-  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: x-large;
 }
 
-input {
-  background: transparent;
-  border: 0;
-  color: #f2f2f2;
-  font-size: 20px;
-  height: 30px;
-  line-height: 30px;
-  outline: none !important;
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  width: 300px;
+  flex-direction: column;
+  gap: 35px;
+  background: #e3e3e3;
+  box-shadow: 16px 16px 32px #c8c8c8,
+        -16px -16px 32px #fefefe;
+  border-radius: 8px;
+}
+
+.inputBox {
+  position: relative;
+  width: 250px;
+}
+
+.inputBox input {
   width: 100%;
+  padding: 10px;
+  outline: none;
+  border: none;
+  color: #000;
+  font-size: 1em;
+  background: transparent;
+  border-left: 2px solid #000;
+  border-bottom: 2px solid #000;
+  transition: 0.1s;
+  border-bottom-left-radius: 8px;
 }
 
-input::-moz-focus-inner {
-  border: 0;
+.inputBox span {
+  margin-top: 5px;
+  position: absolute;
+  left: 0;
+  transform: translateY(-4px);
+  margin-left: 10px;
+  padding: 10px;
+  pointer-events: none;
+  font-size: 12px;
+  color: #000;
+  text-transform: uppercase;
+  transition: 0.5s;
+  letter-spacing: 3px;
+  border-radius: 8px;
 }
 
-#submit {
+.inputBox input:valid~span,
+.inputBox input:focus~span {
+  transform: translateX(113px) translateY(-15px);
+  font-size: 0.8em;
+  padding: 5px 10px;
+  background: #000;
+  letter-spacing: 0.2em;
+  color: #fff;
+  border: 2px;
+}
+
+.inputBox input:valid,
+.inputBox input:focus {
+  border: 2px solid #000;
+  border-radius: 8px;
+}
+
+.enter {
+  height: 45px;
+  width: 100px;
+  border-radius: 5px;
+  border: 2px solid #000;
+  cursor: pointer;
+  background-color: transparent;
+  transition: 0.5s;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 1em;
+}
+
+.enter:hover {
+  background-color: rgb(0, 0, 0);
   color: white;
-  margin-top: 40px;
-  transition: color 300ms;
-
-}
-
-#submit:focus {
-  color: #f2f2f2;
-}
-
-#submit:active {
-  color: #d0d0d2;
 }
