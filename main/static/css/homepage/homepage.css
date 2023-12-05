@@ -138,3 +138,12 @@
     padding-left: 5px;
     text-align: left; /* Выравнивание текста справа */
   }
+
+.sorting-container {
+    display: flex;
+    align-items: center; /* Выравнивание по центру по вертикали */
+}
+
+.sorting-block {
+    margin-right: 10px; /* Регулирует расстояние между блоками (можете настроить по вашему вкусу) */
+}
