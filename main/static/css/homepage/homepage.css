@@ -9,8 +9,6 @@
 }
 
 #navbar {
-    background-color: rgba(255, 255, 255, 0);
-    height: 50px; /* Задайте высоту навбара */
     position: relative; /* Важно: установите позицию навбара как относительную */
 }
 
@@ -18,7 +16,7 @@
     position: absolute;
     border: none;
     width: 100%;
-    height: 645px;
+    height: 100%;
 }
 
 .image-banner img {
@@ -34,14 +32,14 @@
     left: 0;
     width: 100%;
     height: 642px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 1));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgb(46, 46, 46));
     border:none;
 }
 
 .mini-product-container {
     display: flex;
-    flex-wrap: wrap; /* Разрешить перенос на следующую строку */
-    justify-content: space-between; /* Равномерно распределить блоки по ширине контейнера */
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .mini-product-block {
@@ -52,7 +50,13 @@
     position: relative;
     background-color: #f9f9f9;
     border-radius: 15px;
-    overflow: hidden; /* Скрыть часть overlay, выходящую за границы блока */
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mini-product-block:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .image-container {
@@ -70,13 +74,17 @@
 
 .overlay {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mini-product-block:hover .overlay {
+    opacity: 1;
 }
 
 .mini-product-block p {
@@ -87,5 +95,46 @@
     color: white;
     font-size: 18px;
     font-weight: bold;
-    z-index: 1;
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
+
+.mini-product-block .description {
+    position: absolute;
+    height: 80%;
+    width: 80%;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-weight: lighter;
+    font-size: 15px;
+}
+
+.update-block {
+    height: 120px;
+    width: 300px;
+    display: flex;
+    border: 10px;
+    background-color: #3d3c3c;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+  }
+  
+  .image-container {
+    flex: 1; /* Занимает доступное пространство слева */
+  }
+  
+  .additional-image-container img {
+    height: 100px;
+    width: 70px; /* Растягивает изображение по ширине контейнера */
+    border-radius: 5px;
+  }
+  
+  .description-container {
+    flex: 1;
+    padding-left: 5px;
+    text-align: left; /* Выравнивание текста справа */
+  }

@@ -4,8 +4,6 @@
 {% block content %}
 <style>
     #navbar {
-    background-color: rgba(255, 255, 255, 0);
-    height: 50px; /* Задайте высоту навбара */
     position: relative; /* Важно: установите позицию навбара как относительную */
 }
 
@@ -24,7 +22,7 @@
     <img src='{% static "images/pizdec_banner.png" %}'>
 </div>
 
-<div class="container-fluid text-center" style="margin-top: 570px; margin-left: 100px">
+<div class="container-fluid text-center" style="margin-top: 450px; margin-left: 100px">
     <div class="row content">
         <div class="col-sm-8 text-left">
             <h1 class="display-3" style="color: white; font-weight: bolder">Смотреть аниме</h1>
@@ -34,68 +32,222 @@
                 <option value="3">Просмотрам</option>
             </select>
             <div class="mini-product-container" style='margin-top: 20px'>
-        
-                <div class="mini-product-block">
+                
+                <div class="mini-product-block" id="item1" onmouseover="toggleText(item1)" onmouseout="toggleDefault(item1)">
                     <div class="image-container">
-                        <img src='{% static "images/berserk.jpg" %}' class="product-image">
-                        <div class="overlay"></div>
+                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
+                      <div class="overlay"></div>
                     </div>
-                    <p>Берсерк</p>
+                    <p class="title">Берсерк</p>
+                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
+                    </p> 
+                    {% comment %} \* 410 символов максимум {% endcomment %}
                 </div>
         
-                <div class="mini-product-block">
+                <div class="mini-product-block" id="item2" onmouseover="toggleText(item2)" onmouseout="toggleDefault(item2)">
                     <div class="image-container">
-                        <img src='{% static "images/psycho.png" %}' class="product-image">
-                        <div class="overlay"></div>
+                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
+                      <div class="overlay"></div>
                     </div>
-                    <p>Тетрадь смерти</p>
+                    <p class="title">Берсерк</p>
+                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
+                    </p> 
+                    {% comment %} \* 410 символов максимум {% endcomment %}
                 </div>
-        
-                <div class="mini-product-block">
+                <div class="mini-product-block" id="item3" onmouseover="toggleText(item3)" onmouseout="toggleDefault(item3)">
                     <div class="image-container">
-                        <img src='{% static "images/titans.jpg" %}' class="product-image">
-                        <div class="overlay"></div>
+                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
+                      <div class="overlay"></div>
                     </div>
-                    <p>Атака титанов</p>
+                    <p class="title">Берсерк</p>
+                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
+                    </p> 
+                    {% comment %} \* 410 символов максимум {% endcomment %}
                 </div>
-            
-                <div class="mini-product-block">
+                <div class="mini-product-block" id="item4" onmouseover="toggleText(item4)" onmouseout="toggleDefault(item4)">
                     <div class="image-container">
-                        <img src='{% static "images/vinland.png" %}' class="product-image">
-                        <div class="overlay"></div>
+                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
+                      <div class="overlay"></div>
                     </div>
-                    <p>Сага о Винланде</p>
+                    <p class="title">Берсерк</p>
+                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
+                    </p> 
+                    {% comment %} \* 410 символов максимум {% endcomment %}
                 </div>
-        
-                <div class="mini-product-block">
+                <div class="mini-product-block" id="item5" onmouseover="toggleText(item5)" onmouseout="toggleDefault(item5)">
                     <div class="image-container">
-                        <img src='{% static "images/thriller.png" %}' class="product-image">
-                        <div class="overlay"></div>
+                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
+                      <div class="overlay"></div>
                     </div>
-                    <p>Врата Штейна</p>
+                    <p class="title">Берсерк</p>
+                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
+                    </p> 
+                    {% comment %} \* 410 символов максимум {% endcomment %}
                 </div>
-        
-                <div class="mini-product-block">
+                <div class="mini-product-block" id="item6" onmouseover="toggleText(item6)" onmouseout="toggleDefault(item6)">
                     <div class="image-container">
-                        <img src='{% static "images/berserk.jpg" %}' class="product-image">
-                        <div class="overlay"></div>
+                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
+                      <div class="overlay"></div>
                     </div>
-                    <p>Берсерк</p>
+                    <p class="title">Берсерк</p>
+                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
+                    </p> 
+                    {% comment %} \* 410 символов максимум {% endcomment %}
                 </div>
+                <div class="mini-product-block" id="item7" onmouseover="toggleText(item7)" onmouseout="toggleDefault(item7)">
+                    <div class="image-container">
+                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
+                      <div class="overlay"></div>
+                    </div>
+                    <p class="title">Берсерк</p>
+                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
+                    </p> 
+                    {% comment %} \* 410 символов максимум {% endcomment %}
+                </div>
+
         
             </div>
         </div>
-      <div class="col-sm-2 sidenav" style="margin-left: 100px;">
-        <div class="well">
-          <p>ADS</p>
+      <div class="col-sm-2 sidenav" style="margin-left: 100px; margin-top: 10px">
+        <div>
+            <div class="update-block" style='height: 37px; margin-bottom: 10px'>
+                <p style='margin-top: 5px; margin-left: 10px; font-size: 18px; font-weight: bold'>Обновления на сайте</p>
+            </div>
+            <div class="update-block" style='margin-bottom: 15px'>
+                <div class="additional-image-container" style='margin-top: 10px; margin-left: 10px'>
+                  <img src='{% static "images/berserk.jpg" %}'>
+                </div>
+                <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+                  <p style='font-weight: bold'>Берсерк</p>
+                  <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+                  <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+                </div>
+            </div>
+            <div class="update-block" style='margin-bottom: 15px'>
+                <div class="additional-image-container" style='margin-top: 10px; margin-left: 10px'>
+                  <img src='{% static "images/titans.jpg" %}'>
+                </div>
+                <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+                  <p style='font-weight: bold'>Атака титанов</p>
+                  <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+                  <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+                </div>
+            </div>
+            <div class="update-block" style='margin-bottom: 15px'>
+                <div class="additional-image-container" style='margin-top: 10px; margin-left: 10px'>
+                  <img src='{% static "images/vamp.png" %}'>
+                </div>
+                <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+                  <p style='font-weight: bold'>Название</p>
+                  <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+                  <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+                </div>
+            </div>
+            <div class="update-block" style='margin-bottom: 15px'>
+                <div class="additional-image-container" style='margin-top: 10px; margin-left: 10px'>
+                  <img src='{% static "images/superst.png" %}'>
+                </div>
+                <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+                  <p style='font-weight: bold'>Название</p>
+                  <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+                  <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+                </div>
+            </div>
+            <div class="update-block" style='margin-bottom: 15px'>
+                <div class="additional-image-container" style='margin-top: 7px; margin-left: 10px'>
+                  <img src='{% static "images/sport.png" %}'>
+                </div>
+                <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+                  <p style='font-weight: bold'>Название</p>
+                  <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+                  <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+                </div>
+            </div>
+          </div>
+          <div class="update-block" style='height: 37px; margin-bottom: 10px; margin-top: 10px'>
+            <p style='margin-top: 5px; margin-left: 10px; font-size: 18px; font-weight: bold'>Обновления на сайте</p>
         </div>
-        <div class="well">
-          <p>ADS</p>
+        <div class="update-block" style='margin-bottom: 15px'>
+            <div class="additional-image-container" style='margin-top: 10px; margin-left: 10px'>
+              <img src='{% static "images/berserk.jpg" %}'>
+            </div>
+            <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+              <p style='font-weight: bold'>Берсерк</p>
+              <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+              <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+            </div>
         </div>
+        <div class="update-block" style='margin-bottom: 15px'>
+            <div class="additional-image-container" style='margin-top: 10px; margin-left: 10px'>
+              <img src='{% static "images/titans.jpg" %}'>
+            </div>
+            <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+              <p style='font-weight: bold'>Атака титанов</p>
+              <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+              <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+            </div>
+        </div>
+        <div class="update-block" style='margin-bottom: 15px'>
+            <div class="additional-image-container" style='margin-top: 10px; margin-left: 10px'>
+              <img src='{% static "images/vamp.png" %}'>
+            </div>
+            <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+              <p style='font-weight: bold'>Название</p>
+              <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+              <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+            </div>
+        </div>
+        <div class="update-block" style='margin-bottom: 15px'>
+            <div class="additional-image-container" style='margin-top: 10px; margin-left: 10px'>
+              <img src='{% static "images/superst.png" %}'>
+            </div>
+            <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+              <p style='font-weight: bold'>Название</p>
+              <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+              <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+            </div>
+        </div>
+        <div class="update-block" style='margin-bottom: 15px'>
+            <div class="additional-image-container" style='margin-top: 7px; margin-left: 10px'>
+              <img src='{% static "images/sport.png" %}'>
+            </div>
+            <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
+              <p style='font-weight: bold'>Название</p>
+              <p style='color: #A9A9A9'>Тип: ТВ-Сериал</p>
+              <p style='color: #A9A9A9'>Количество серий: 16/25</p>
+            </div>
+        </div>
+      </div>
       </div>
     </div>
 </div>
-  
+<script>
+    
+    function toggleText(element) {
+        var title = element.querySelector('.title');
+        var description = element.querySelector('.description');
+    
+        if (title && description) {
+            title.style.opacity = 0; // Скрываем текст "Берсерк"
+            description.style.opacity = 1; // Показываем текст "Описание"
+        } else {
+            console.error('Элементы с указанными классами не найдены внутри элемента с ID ' + element.id);
+        }
+    }
+    
+    function toggleDefault(element) {
+        var title = element.querySelector('.title');
+        var description = element.querySelector('.description');
+    
+        if (title && description) {
+            title.style.opacity = 1; // Показываем текст "Берсерк"
+            description.style.opacity = 0; // Скрываем текст "Описание"
+        } else {
+            console.error('Элементы с указанными классами не найдены внутри элемента с ID ' + element.id);
+        }
+    }
+    
+</script> 
 
 
 {% endblock content %}
