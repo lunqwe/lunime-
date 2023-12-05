@@ -2,116 +2,100 @@
 {% load static %}
 {% block title %}Главная{% endblock title %}
 {% block content %}
+<style>
+    #navbar {
+    background-color: rgba(255, 255, 255, 0);
+    height: 50px; /* Задайте высоту навбара */
+    position: relative; /* Важно: установите позицию навбара как относительную */
+}
+
+#background-image {
+    width: 100%;
+    height: 650px;
+    position: absolute;
+    top: 0;
+    margin-top: -50px;
+    z-index: -1;
+}
+</style>
 {% block css %} <link rel="stylesheet" href="{% static "css/homepage/homepage.css" %}" type="text/css" />{% endblock css %}
-<div class='container' style='background-color: white;'>
-    <div class="row anime-description" style='margin-left: 1px'>
-        <a href='/'>
-            <h1 class="display-1" style="margin-left: 10px; margin-bottom: 20px">Новинки сезона</h1>
-        </a>
-        <div class="anime-container">
-            <div class="col-md-3">
-                <a href='/anime/2'>
-                    <div class="thumbnail">
-                        <img src="{% static "images/ghoul.jpg" %}" alt="Товар 1">
-                    </div>
-                    <div class="caption">
-                        {% comment %} {{ anime.title|slice:":30" }}{% if anime.description|length > 30 %}...{% endif %}  {% endcomment %}
-                        <p>Токийский Гуль</p>
-                    </div>
-                </a>
-            </div>
 
-            <div class="col-md-3">
-                <a href='/'>
-                    <div class="thumbnail">
-                        <img src="{% static "images/berserk.jpg" %}" alt="Товар 1">
-                    </div>
-                    <div class="caption">
-                        <p>Берсерк</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-3">
-                <a href='/anime/1'>
-                    <div class="thumbnail">
-                        <img src="{% static "images/jutsu.jpg" %}" alt="Товар 1">
-                    </div>
-                    <div class="caption">
-                        <p>Магическая битва 2</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-3">
-                <a href='/'>
-                    <div class="thumbnail">
-                        <img src="{% static "images/hunter.jpg" %}" alt="Товар 1">
-                    </div>
-                    <div class="caption">
-                        <p>Хантер х Хантер</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="anime-container">
-        <div class="anime-description">
-            <a href='/'>
-                <h1 class="display-1">Недавно вышло</h1>
-            </a>
-            <div class="list-block" style="margin-bottom: 5px;">
-                <ul>
-                    {% for anime in novelty_list %}
-                    <li>
-                        {% if anime.temp_type == 'Film'%}
-                            <a href='anime/film/{{ anime.id }}' class="d-flex align-items-start">
-                        {% else %}
-                            <a href='anime/{{ anime.id }}' class="d-flex align-items-start">
-                        {% endif %}
-                            <div class="mr-3"> 
-                                <img alt="" src="{{ anime.image.url }}" style="width: 70px; height: 96px;">
-                            </div>
-                            <div style='margin-left: 20px'>
-                                <p class="news-text-main" style='margin-bottom: 5px'>{{ anime.title }}</p>
-                                <p class="news-text-additional text-muted">{{ anime.anime_type }}</p>
-                        {% if anime.temp_type == "Anime" %}
-                                <p class="news-text-additional text-muted">Количество серий: {{ anime.amount_of_episodes }}</p>
-                        {% endif %}
-                            </div>
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
-<div class="anime-description">
-    <a href='/'>
-        <h2>Новые аниме на сайте</h2>
-    </a>
-    {% for anime in anime_list %}
-            <div style="display: flex; align-items: flex-start; margin-bottom: 30px;">
-                <img class="thumbnail" style="margin-top: 10px; margin-left: 10px;" alt="" src="{{ anime.image.url }}" width=165 height=235>
-                <div class="updates-text" style="margin-left: 15px; margin-top: 10px">
-                    {% if anime.temp_type == "Film" %}
-                        <a href='anime/film/{{ anime.id }}'>
-                            <p style="margin: 0; font-size: 20px">{{ anime.title }}</p>
-                        </a>
-                    {% else %}
-                        <a href='anime/{{ anime.id }}'>
-                            <p style="margin: 0; font-size: 20px">{{ anime.title }}</p>
-                        </a>
-                    {% endif %}
-                    <p class="news-text-additional" style='margin-top: 10px; font-size: 15px'>{% for genre in anime.genres.all %} <a href='/catalog/genre/{{ genre.id }}'>{{ genre.name }}</a> / {% endfor %}</p>
-                    <div class="container-fixed narrow-container">
-                        <p class="news-text-additional" style="margin-top: 30px; font-size: 15px">{{ anime.description|slice:":550" }}{% if anime.description|length > 550 %}...{% endif %} </p>
-                    </div>
-                </div>
-            </div>
-    {% endfor %}
+<div class='image-banner' id="background-image">
+    <img src='{% static "images/pizdec_banner.png" %}'>
 </div>
+
+<div class="container-fluid text-center" style="margin-top: 570px; margin-left: 100px">
+    <div class="row content">
+        <div class="col-sm-8 text-left">
+            <h1 class="display-3" style="color: white; font-weight: bolder">Смотреть аниме</h1>
+            Сортировка по: <select class="form-select" aria-label="Default select example">
+                <option value="1">Рейтингу</option>
+                <option value="2">Дате добавления</option>
+                <option value="3">Просмотрам</option>
+            </select>
+            <div class="mini-product-container" style='margin-top: 20px'>
+        
+                <div class="mini-product-block">
+                    <div class="image-container">
+                        <img src='{% static "images/berserk.jpg" %}' class="product-image">
+                        <div class="overlay"></div>
+                    </div>
+                    <p>Берсерк</p>
+                </div>
+        
+                <div class="mini-product-block">
+                    <div class="image-container">
+                        <img src='{% static "images/psycho.png" %}' class="product-image">
+                        <div class="overlay"></div>
+                    </div>
+                    <p>Тетрадь смерти</p>
+                </div>
+        
+                <div class="mini-product-block">
+                    <div class="image-container">
+                        <img src='{% static "images/titans.jpg" %}' class="product-image">
+                        <div class="overlay"></div>
+                    </div>
+                    <p>Атака титанов</p>
+                </div>
+            
+                <div class="mini-product-block">
+                    <div class="image-container">
+                        <img src='{% static "images/vinland.png" %}' class="product-image">
+                        <div class="overlay"></div>
+                    </div>
+                    <p>Сага о Винланде</p>
+                </div>
+        
+                <div class="mini-product-block">
+                    <div class="image-container">
+                        <img src='{% static "images/thriller.png" %}' class="product-image">
+                        <div class="overlay"></div>
+                    </div>
+                    <p>Врата Штейна</p>
+                </div>
+        
+                <div class="mini-product-block">
+                    <div class="image-container">
+                        <img src='{% static "images/berserk.jpg" %}' class="product-image">
+                        <div class="overlay"></div>
+                    </div>
+                    <p>Берсерк</p>
+                </div>
+        
+            </div>
+        </div>
+      <div class="col-sm-2 sidenav" style="margin-left: 100px;">
+        <div class="well">
+          <p>ADS</p>
+        </div>
+        <div class="well">
+          <p>ADS</p>
+        </div>
+      </div>
+    </div>
+</div>
+  
 
 
 {% endblock content %}
