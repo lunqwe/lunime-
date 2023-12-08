@@ -10,9 +10,11 @@ from selenium.common.exceptions import StaleElementReferenceException,  TimeoutE
 from django.core.files.base import ContentFile
 import traceback
 from .models import Anime, Genre, Episode, Film
+from .models import AdditionalImage
 from django.core.files.uploadedfile import InMemoryUploadedFile
-import io
+from io import BytesIO
 from PIL import Image
+import uuid
 
 def animego_link_parser(link):
     print("Начинаем парсить...")
@@ -32,6 +34,8 @@ def animego_link_parser(link):
                     print(href)
                     file.write(href + '\n')
                     anime_counter += 1
+        file.close()
+        
 
     print("Спаршено страниц:", links_counter)
     print("Получено аниме:", anime_counter)
@@ -67,6 +71,8 @@ def links_parser(file_name):
                     duration = data_description.get('Длительность', '0')
                     description = data_description.get('Описание', '0')
                     image = image_saver(link_data.get('Обложка', ''))
+                    additional_images = link_data.get('Кадры', "0")
+                    
                     try:
                         check = Anime.objects.filter(title = title)
                         if check:
@@ -99,6 +105,10 @@ def links_parser(file_name):
                                     # Обработка ситуации, когда жанр не найден
                                     pass
                             new_anime.genres.set(genre_objects)
+                            
+                            for image in additional_images:
+                                image_to_save = AdditionalImage.objects.create(anime=new_film, image=image_saver(image))
+                                
                             remove_first_line(file_name)
                     except Exception as e:
                         print(f"Ошибка добавления в базу данных: {e}")                
@@ -116,6 +126,7 @@ def links_parser(file_name):
                     description = data_description.get('Описание', '0')
                     image = image_saver(link_data.get('Обложка', ''))
                     link = link_data['Плеер']['Ссылка']
+                    additional_images = link_data.get('Кадры', "0")
                     try:
                         try:
                             check = Film.objects.get(title = title)
@@ -141,6 +152,10 @@ def links_parser(file_name):
                                 except Genre.DoesNotExist:
                                         # Обработка ситуации, когда жанр не найден
                                     pass
+                                
+                            for image in additional_images:
+                                image_to_save = AdditionalImage.objects.create(anime=new_anime, image=image_saver(image))
+                                
                             new_film.genres.set(genre_objects) 
                             remove_first_line(file_name)
                     except Exception as e:
@@ -210,7 +225,10 @@ def film_parser(driver, link):
             if src_check:
                 break
         except(StaleElementReferenceException, TimeoutException, NoSuchElementException):
-                continue
+                print("Ошибка получения плеера, повторяем попытку подключения заново")
+                film_parser(driver, link)
+                
+                
     if src_check == True:
         try:
             film_link = player_link.get_attribute('data-player').split('?')[0]
@@ -272,7 +290,8 @@ def series_parser(driver, link, ongoing):
                         if src_check:
                             break
                     except(StaleElementReferenceException, TimeoutException, NoSuchElementException):
-                        continue
+                        print("Ошибка получения плеера, повторяем попытку подключения заново")
+                        series_parser(driver, link, ongoing)
                     
                     
                     
@@ -316,39 +335,87 @@ def series_parser(driver, link, ongoing):
     finally:
         driver.quit()
 
-def image_parser(driver, link):
+def image_parser(driver, xpath):
     try:
-        image_element = WebDriverWait(driver, 3).until(
-            EC.visibility_of_element_located((By.XPATH, f'//*[@id="content"]/div/div[1]/div[1]/div[1]/div[2]/img'))
-        )
-        image_url = image_element.get_attribute('src')
+        # Используем XPath для получения ссылки на изображение из атрибута srcset
+        image = WebDriverWait(driver, 5).until(
+                    EC.presence_of_element_located((By.XPATH, f'//*[@id="content"]/div/div[1]/div[1]/div[1]/div[2]/img'))
+                    )
 
-        image_content = requests.get(image_url).content
+        
+        image_url = image.get_attribute('srcset').split(' ')[0]
+        print(image_url)
+        # Используем библиотеку requests для загрузки изображения
+        response = requests.get(image_url)
 
-        image_file = io.BytesIO(image_content)
-        image_file.name = image_url.split('/')[-1]
-
-        return image_file
-
+        # Проверяем успешность запроса
+        if response.status_code == 200:
+            # Получаем байт-код изображения
+            image_bytes = BytesIO(response.content)
+            return image_bytes
+        else:
+            print(f"Failed to fetch image. Status code: {response.status_code}")
+            return None
     except Exception as e:
-        print(f"Ошибка при парсинге и сохранении изображения: {e}")
+        print(f"Error: {e}")
         return None
 
-def image_saver(image):
-    image = Image.open(image)
-    img_byte_array = io.BytesIO()
-    image.save(img_byte_array, format='JPEG')  # Выберите формат сохранения по необходимости
+def additional_images_parser(driver):
+    try:
+        image1 = WebDriverWait(driver, 5).until(
+                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[1]/img'))
+                        ).get_attribute('src')
+        image2 = WebDriverWait(driver, 5).until(
+                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[2]/img'))
+                        ).get_attribute('src')
+        image3 = WebDriverWait(driver, 5).until(
+                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[3]/img'))
+                        ).get_attribute('src')
+        
+        converted = []
+        unconverted = [image1, image2, image3]
+        
+        for image_url in unconverted:
+            response = requests.get(image_url)
 
-    # После этого, вы можете создать объект InMemoryUploadedFile
-    img_file = InMemoryUploadedFile(
-        img_byte_array,
-        None,
-        'image.jpg',  # Имя файла
-        'image/jpeg',  # MIME-тип
-        img_byte_array.tell(),
-        None
-    )
-    return img_file
+        # Проверяем успешность запроса
+            if response.status_code == 200:
+                # Получаем байт-код изображения
+                image_bytes = BytesIO(response.content)
+                converted.append(image_bytes)
+            else:
+                print(f"Failed to fetch image. Status code: {response.status_code}")
+                return None
+        
+        return converted
+            
+    except:
+        print("Кадры с аниме не найдены")
+        return None
+    
+    
+def image_saver(image_bytes_io):
+    try:
+        # Генерируем уникальное имя файла
+        unique_filename = str(uuid.uuid4()) + '.jpg'
+
+        # Открываем изображение с помощью PIL
+        img = Image.open(image_bytes_io)
+
+        # Создаем объект BytesIO для сохранения изображения
+        img_io = BytesIO()
+        img.save(img_io, format='JPEG')  # Выберите формат изображения по вашему усмотрению
+
+        # Создаем объект InMemoryUploadedFile с уникальным именем файла
+        img_file = InMemoryUploadedFile(
+            img_io, None, unique_filename, 'image/jpeg', img_io.tell(), None
+        )
+
+        # Возвращаем объект InMemoryUploadedFile
+        return img_file
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
 def description_parser(driver, link, start_range,stop_range, i_plus_required):
     description_dict = {}
@@ -437,7 +504,9 @@ def parser(link):
             i_plus_required = False
 
         image = image_parser(driver, link)
+        additional_images = additional_images_parser(driver)
         data['Обложка'] = image
+        data['Кадры'] = additional_images
         description = description_parser(driver, link, start_range, stop_range, i_plus_required)
         
         
@@ -446,7 +515,7 @@ def parser(link):
         actions.send_keys(Keys.PAGE_DOWN).perform()
 
         try:
-            button18 = WebDriverWait(driver, 5).until(
+            button18 = WebDriverWait(driver, 7).until(
                 EC.presence_of_element_located((By.XPATH, '//*[@id="video-player"]/div[1]/div/div[2]/button[2]'))
             )
             print("✔️18+ обнаружено")
@@ -455,7 +524,7 @@ def parser(link):
         except:
             try:
                 actions.send_keys(Keys.PAGE_DOWN).perform()
-                button18 = WebDriverWait(driver, 5).until(
+                button18 = WebDriverWait(driver, 7).until(
                     EC.presence_of_element_located((By.XPATH, '//*[@id="video-player"]/div[1]/div/div[2]/button[2]'))
                 )
                 print("✔️18+ обнаружено")
@@ -476,7 +545,7 @@ def parser(link):
         except:
             try:
                 actions.send_keys(Keys.PAGE_DOWN).perform()
-                player_select_btn = WebDriverWait(driver, 5).until(
+                player_select_btn = WebDriverWait(driver, 10).until(
                         EC.presence_of_element_located((By.XPATH, '//*[@id="video-players-tab"]'))
                     )
                 player_select_btn.click()
@@ -502,11 +571,10 @@ def parser(link):
             data['Обложка'] = image
         driver.quit()
         return data
-        
+    
 
-print(links_parser('D:\.prog\lunime\main\links.txt'))
-
-# # print(image_parser('https://animego.org/anime/monolog-farmacevta-2422'))
+print(links_parser('D:\.prog\lunime-repo\lunime-\main\links.txt'))
+# print(image_parser('https://animego.org/anime/monolog-farmacevta-2422'))
 # print(animego_link_parser('https://animego.org/anime?sort=r.rating&direction=desc&type=animes&page='))
 # data = {'Название': 'Мастера Меча Онлайн: Алисизация — Война в Подмирье 2', 'Характеристики': {'Тип': 'ТВ Сериал', 'Эпизоды': '11', 'Статус': 'Вышел', 'Жанр': 'Игры, Приключения, Романтика, Фэнтези, Экшен', 'Первоисточник': 'Легкая новвела', 'Сезон': 'Лето 2020', 'Выпуск': 'с 12 июля 2020 по 20 сентября 2020', 'Студия': 'A-1 Pictures Inc.', 'Рейтинг MPAA': 'NC-17', 'Возрастные ограничения': '18+', 'Длительность': '24 мин. ~ серия', 'Описание': 'Вторая часть аниме «Мастера Меча Онлайн: Алисизация — Война в Подмирье».\n\nЧтобы спасти Андерворлд, Кирито, Юджио, Алисе и всем их союзникам необходимо найти способ разбить армию Дарк Территори.'}, 'Плеер': {1: '//kodik.info/seria/685108/6a9808e89588cc54a7bf64d9fc7fa711/720p', 2: '//kodik.info/seria/689270/6d9aed56a45a3562ca589ce4368c3791/720p', 3: '//kodik.info/seria/693007/2f97934d4f239094eaab9a82a5c255f2/720p', 4: '//kodik.info/seria/697296/7a58d479f21b022adb876c5811da7e81/720p', 5: '//kodik.info/seria/702487/1ca76eecb5bb37f926dabf19be836e05/720p', 6: '//kodik.info/seria/705918/bb8efdf8ed944dc2454bee2daa4aa3e9/720p', 7: '//kodik.info/seria/710490/457a9de3d1a486fdc9d240a840c05db5/720p', 8: '//kodik.info/seria/715329/c8fcd45c51c7981e68586e5abf81f179/720p', 9: '//kodik.info/seria/717675/07ca3512dbbd4187d457cf787b8a2c85/720p', 10: '//kodik.info/seria/719141/a65f57d871ba374b29f00d060f979630/720p', 11: '//kodik.info/seria/720494/6c82aeeeb915677c1c7ed7b207fe77b0/720p'}}
 

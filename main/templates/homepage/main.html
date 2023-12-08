@@ -39,82 +39,26 @@
                     </select>
                 </div>
             </div>
-            <div class="mini-product-container" style='margin-top: 20px'>
+            <div id="anime-list" class="mini-product-container" style='margin-top:20px'></div>
+            {% comment %} <div class="mini-product-container" style='margin-top: 20px'>
+              
+                {% for anime in anime_list %}
+                 
+                    <div class="mini-product-block" id="item{{anime.id}}" onmouseover="toggleText(item{{anime.id}})" onmouseout="toggleDefault(item{{anime.id}})">
+                       <a href='/anime/{{ anime.id }}' style='width: 100%; height: 100%'>
+                          <div class="image-container">
+                            <img src='{{ anime.image.url }}' class="product-image">
+                            <div class="overlay"></div>
+                        </div>
+                        <p class="title">{{ anime.title|slice:":30" }}{% if anime.title|length > 30 %}...{% endif %}</p>
+                        <p class="description">
+                          {{ anime.description|slice:":450" }}{% if anime.description|length > 450 %}...{% endif %}
+                        </p> 
+                      </a>
+                  </div>
                 
-                <div class="mini-product-block" id="item1" onmouseover="toggleText(item1)" onmouseout="toggleDefault(item1)">
-                    <div class="image-container">
-                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
-                      <div class="overlay"></div>
-                    </div>
-                    <p class="title">Берсерк</p>
-                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
-                    </p> 
-                    {% comment %} \* 410 символов максимум {% endcomment %}
-                </div>
-        
-                <div class="mini-product-block" id="item2" onmouseover="toggleText(item2)" onmouseout="toggleDefault(item2)">
-                    <div class="image-container">
-                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
-                      <div class="overlay"></div>
-                    </div>
-                    <p class="title">Берсерк</p>
-                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
-                    </p> 
-                    {% comment %} \* 410 символов максимум {% endcomment %}
-                </div>
-                <div class="mini-product-block" id="item3" onmouseover="toggleText(item3)" onmouseout="toggleDefault(item3)">
-                    <div class="image-container">
-                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
-                      <div class="overlay"></div>
-                    </div>
-                    <p class="title">Берсерк</p>
-                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
-                    </p> 
-                    {% comment %} \* 410 символов максимум {% endcomment %}
-                </div>
-                <div class="mini-product-block" id="item4" onmouseover="toggleText(item4)" onmouseout="toggleDefault(item4)">
-                    <div class="image-container">
-                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
-                      <div class="overlay"></div>
-                    </div>
-                    <p class="title">Берсерк</p>
-                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
-                    </p> 
-                    {% comment %} \* 410 символов максимум {% endcomment %}
-                </div>
-                <div class="mini-product-block" id="item5" onmouseover="toggleText(item5)" onmouseout="toggleDefault(item5)">
-                    <div class="image-container">
-                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
-                      <div class="overlay"></div>
-                    </div>
-                    <p class="title">Берсерк</p>
-                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
-                    </p> 
-                    {% comment %} \* 410 символов максимум {% endcomment %}
-                </div>
-                <div class="mini-product-block" id="item6" onmouseover="toggleText(item6)" onmouseout="toggleDefault(item6)">
-                    <div class="image-container">
-                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
-                      <div class="overlay"></div>
-                    </div>
-                    <p class="title">Берсерк</p>
-                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
-                    </p> 
-                    {% comment %} \* 410 символов максимум {% endcomment %}
-                </div>
-                <div class="mini-product-block" id="item7" onmouseover="toggleText(item7)" onmouseout="toggleDefault(item7)">
-                    <div class="image-container">
-                      <img src='{% static "images/berserk.jpg" %}' class="product-image">
-                      <div class="overlay"></div>
-                    </div>
-                    <p class="title">Берсерк</p>
-                    <p class="description">Боль, кровь и слёзы. На престол восходит новый правитель. Его слуги, подручные демоны безнаказанно творят бесчинства в городе. Все меняется когда в город, скрытый темнотой ночи, попадает тяжёлый воин. С разнообразным вооружением для самых непредвиденных моментов, в броне, тело его все покрыто шрамами – черный мечник. Его меч настолько огромен, что может сравниться с его лютой злобой к королю и демонам.
-                    </p> 
-                    {% comment %} \* 410 символов максимум {% endcomment %}
-                </div>
-
-        
-            </div>
+                {% endfor %}
+            </div> {% endcomment %}
         </div>
       <div class="col-sm-2 sidenav" style="margin-left: 100px; margin-top: 10px">
         <div>
@@ -231,31 +175,104 @@
 </div>
 <script>
     
-    function toggleText(element) {
+    function toggleText(elementId) {
+      var element = document.getElementById(elementId);
+
+      if (element) {
+          var title = element.querySelector('.title');
+          var description = element.querySelector('.description');
+
+          if (title && description) {
+              title.style.opacity = 0; // Скрываем текст "Берсерк"
+              description.style.opacity = 1; // Показываем текст "Описание"
+          } else {
+              console.error('Элементы с указанными классами не найдены внутри элемента с ID ' + elementId);
+          }
+      } else {
+          console.error('Элемент с ID ' + elementId + ' не найден.');
+      }
+  }
+    
+  function toggleDefault(elementId) {
+    var element = document.getElementById(elementId);
+
+    if (element) {
         var title = element.querySelector('.title');
         var description = element.querySelector('.description');
-    
+
         if (title && description) {
-            title.style.opacity = 0; // Скрываем текст "Берсерк"
-            description.style.opacity = 1; // Показываем текст "Описание"
+            title.style.opacity = 1; // Скрываем текст "Берсерк"
+            description.style.opacity = 0; // Показываем текст "Описание"
         } else {
-            console.error('Элементы с указанными классами не найдены внутри элемента с ID ' + element.id);
+            console.error('Элементы с указанными классами не найдены внутри элемента с ID ' + elementId);
         }
+    } else {
+        console.error('Элемент с ID ' + elementId + ' не найден.');
     }
-    
-    function toggleDefault(element) {
-        var title = element.querySelector('.title');
-        var description = element.querySelector('.description');
-    
-        if (title && description) {
-            title.style.opacity = 1; // Показываем текст "Берсерк"
-            description.style.opacity = 0; // Скрываем текст "Описание"
-        } else {
-            console.error('Элементы с указанными классами не найдены внутри элемента с ID ' + element.id);
-        }
-    }
+}
     
 </script> 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+  var loading = false;
+  var page = 1;  // Начинайте с 2, так как первая страница уже загружена
 
+  function loadMoreAnime() {
+      if (!loading) {
+          loading = true;
+
+          $.ajax({
+              url: '/get_anime/',
+              data: { page: page },
+              dataType: 'json',
+              success: function (data) {
+                  console.log(data); // Вывод данных в консоль для отладки
+
+                  if (data.length > 0) {
+                      var html = '';
+                      for (var i = 0; i < data.length; i++) {
+                          var anime = data[i];
+
+                          // Проверяем, что свойство 'image_url' существует в объекте anime
+                          var imageUrl = anime.image_url ? anime.image_url : '';
+
+                          html += `<div class="mini-product-block" id="item${anime.id}" onmouseover="toggleText('item${anime.id}')" onmouseout="toggleDefault('item${anime.id}')">`;
+
+                          html += '<a href="/anime/' + anime.id + '" style="width: 100%; height: 100%">';
+                          html += '<div class="image-container">';
+                          html += '<img src="' + imageUrl + '" class="product-image">';
+                          html += '<div class="overlay"></div>';
+                          html += '</div>';
+                          html += '<p class="title">' + (anime.title.length > 30 ? anime.title.slice(0, 30) + '...' : anime.title) + '</p>';
+                          html += '<p class="description">' + (anime.description.length > 450 ? anime.description.slice(0, 450) + '...' : anime.description) + '</p>';
+                          html += '</a>';
+                          html += '</div>';
+                      }
+                      $('#anime-list').append(html);
+                      page += 1;
+                  } else {
+                      // Если больше нет данных, скройте кнопку загрузки
+                      $('#load-more').hide();
+                  }
+                  loading = false;
+              },
+              error: function () {
+                  loading = false;
+              }
+          });
+      }
+  }
+
+  // Обработчик события прокрутки
+  $(window).scroll(function () {
+      if (!loading && $(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+          // Если пользователь близок к концу страницы и нет текущей загрузки
+          loadMoreAnime(); // Вызов функции загрузки данных
+      }
+  });
+
+  // Загрузите первую порцию данных при загрузке страницы
+  loadMoreAnime();
+</script>
 
 {% endblock content %}

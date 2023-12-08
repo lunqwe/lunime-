@@ -32,7 +32,7 @@ class Film(models.Model):
     
 class Anime(models.Model):
     title = models.CharField(max_length=255)
-    image = models.ImageField()
+    image = models.ImageField(upload_to="anime_covers/")
     anime_type = models.CharField(max_length=255, default="ТВ-Сериал")
     description = models.CharField(max_length=1500)
     date_published = models.CharField(max_length=255)
@@ -44,7 +44,7 @@ class Anime(models.Model):
     anilibria_link = models.CharField(max_length=999, default=0)
     duration = models.CharField(max_length=255, default=0)
     origin_source = models.CharField(max_length=255, default=0)
-    temp_type = models.CharField(max_length=255, default = 'Anime')
+    temp_type = models.CharField(max_length=255, default = 'Anime') 
     def __str__(self):
         return self.title
 
@@ -55,6 +55,10 @@ class Episode(models.Model):
     
     def __str__(self):
         return f"{self.anime.title} - {self.n_episode}" 
+
+class AdditionalImage(models.Model):
+    anime = models.ForeignKey(Anime, on_delete=models.CASCADE, default="/")
+    image = models.ImageField(upload_to="additional_images/")
 
 class AdditionalName(models.Model):
     title_name = models.CharField(max_length=255)
