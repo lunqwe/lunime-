@@ -57,8 +57,18 @@ class Episode(models.Model):
         return f"{self.anime.title} - {self.n_episode}" 
 
 class AdditionalImage(models.Model):
-    anime = models.ForeignKey(Anime, on_delete=models.CASCADE, default="/")
+    anime = models.ForeignKey(Anime, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="additional_images/")
+    
+    def __str__(self):
+        return self.anime.title
+    
+class AdditionalFilmImage(models.Model):
+    film = models.ForeignKey(Film, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="additional_images/")
+    
+    def __str__(self):
+        return self.film.title
 
 class AdditionalName(models.Model):
     title_name = models.CharField(max_length=255)

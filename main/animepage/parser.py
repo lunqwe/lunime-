@@ -10,7 +10,7 @@ from selenium.common.exceptions import StaleElementReferenceException,  TimeoutE
 from django.core.files.base import ContentFile
 import traceback
 from .models import Anime, Genre, Episode, Film
-from .models import AdditionalImage
+from .models import AdditionalImage, AdditionalFilmImage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO
 from PIL import Image
@@ -107,7 +107,7 @@ def links_parser(file_name):
                             new_anime.genres.set(genre_objects)
                             
                             for image in additional_images:
-                                image_to_save = AdditionalImage.objects.create(anime=new_film, image=image_saver(image))
+                                image_to_save = AdditionalImage.objects.create(anime=new_anime, image=image_saver(image))
                                 
                             remove_first_line(file_name)
                     except Exception as e:
@@ -152,9 +152,9 @@ def links_parser(file_name):
                                 except Genre.DoesNotExist:
                                         # Обработка ситуации, когда жанр не найден
                                     pass
-                                
+                            
                             for image in additional_images:
-                                image_to_save = AdditionalImage.objects.create(anime=new_anime, image=image_saver(image))
+                                image_to_save = AdditionalFilmImage.objects.create(film=new_film, image=image_saver(image))    
                                 
                             new_film.genres.set(genre_objects) 
                             remove_first_line(file_name)
@@ -202,34 +202,32 @@ def link_check(player_link, driver):
 
 def film_parser(driver, link):
     film_dict = {}
+
     try:
         player_select_btn = WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="video-players-tab"]'))
-            )
+        )
         player_select_btn.click()
-    except:
-        player_select_btn = WebDriverWait(driver, 5).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@id="video-players-tab"]'))
-                )
-        player_select_btn.click()
-        print(f"Произошла ошибка: {e}")
-        traceback.print_exc() 
-                                
-    span_lst = [1,2,3,4,5,6,7,8,9]
+
+    except Exception as e:
+        print(f"Ошибка при выборе вкладки: {e}")
+        traceback.print_exc()
+
+    span_lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    
     for num in span_lst:
         try:
             player_link = WebDriverWait(driver, 5).until(
-                    EC.visibility_of_element_located((By.XPATH, f'//*[@id="video-players"]/span[{num}]'))
-                )
+                EC.visibility_of_element_located((By.XPATH, f'//*[@id="video-players"]/span[{num}]'))
+            )
             src_check = link_check(player_link, driver)
             if src_check:
                 break
-        except(StaleElementReferenceException, TimeoutException, NoSuchElementException):
-                print("Ошибка получения плеера, повторяем попытку подключения заново")
-                film_parser(driver, link)
-                
-                
-    if src_check == True:
+
+        except (StaleElementReferenceException, TimeoutException, NoSuchElementException):
+            continue
+
+    if src_check:
         try:
             film_link = player_link.get_attribute('data-player').split('?')[0]
             print(film_link)
@@ -238,14 +236,17 @@ def film_parser(driver, link):
             film_dict['Ссылка'] = film_link
             driver.quit()
             return film_dict
+
         except Exception as e:
             print("Не удалось получить ссылку на плеер")
             print(f"Произошла ошибка: {e}")
-            traceback.print_exc() 
+            traceback.print_exc()
+
     else:
         print("Нету ссылки кодика, аниме не добавится в базу")
-        driver.quit()
-        return None
+
+    driver.quit()
+    return None
 
 def process_data(input_data):
     expected_keys = ["Тип", "Эпизоды", "Статус", "Жанр", "Первоисточник", "Сезон", "Выпуск", "Студия", "Длительность"]
@@ -257,13 +258,15 @@ def process_data(input_data):
 def series_parser(driver, link, ongoing):
     episodes_dict = {}
     counter = 0
+    actions = ActionChains(driver)
+
     try:
         carousel = WebDriverWait(driver, 3).until(
             EC.visibility_of_element_located((By.ID, "video-carousel"))
         )
 
         buttons = carousel.find_elements(By.CLASS_NAME, "video-player-bar-series-item")
-        
+
         for button in buttons:
             button.click()
             try:
@@ -272,15 +275,16 @@ def series_parser(driver, link, ongoing):
                     EC.presence_of_element_located(player_select_btn_locator)
                 )
                 player_select_btn.click()
-            except:
+            except Exception:
                 player_select_btn_locator = (By.XPATH, '//*[@id="video-players-tab"]')
                 player_select_btn = WebDriverWait(carousel, 5).until(
                     EC.presence_of_element_located(player_select_btn_locator)
                 )
-                player_select_btn.click() 
-            player_select_btn.click()       
+                player_select_btn.click()
+
+            player_select_btn.click()
             try:
-                span_lst = [1,2,3,4,5,6,7,8,9]
+                span_lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
                 for num in span_lst:
                     try:
                         player_link = WebDriverWait(driver, 3).until(
@@ -289,38 +293,32 @@ def series_parser(driver, link, ongoing):
                         src_check = link_check(player_link, driver)
                         if src_check:
                             break
-                    except(StaleElementReferenceException, TimeoutException, NoSuchElementException):
-                        print("Ошибка получения плеера, повторяем попытку подключения заново")
-                        series_parser(driver, link, ongoing)
-                    
-                    
-                    
-                    
+                    except (StaleElementReferenceException, TimeoutException, NoSuchElementException):
+                        continue
+
             except Exception as e:
                 print(f"Ошибка {e}")
                 traceback.print_exc()
-                
+
             if src_check:
                 counter += 1
                 try:
                     episode = player_link.get_attribute('data-player').split('?')[0]
                 except StaleElementReferenceException:
                     episode = player_link.get_attribute('data-player').split('?')[0]
-                print(f'{counter} - '+ episode)
+                print(f'{counter} - ' + episode)
                 episodes_dict[counter] = episode
             else:
-                print("❌Нету ссылки кодика, аниме не добавится в базу")
+                print("❌ Нету ссылки кодика, аниме не добавится в базу")
                 return None
-        
+
         print(f'✔️   {link.strip()}: парсинг пройден')
-        print("Полученное количество серий:", counter,'\n')
+        print("Полученное количество серий:", counter, '\n')
         return episodes_dict
 
     except StaleElementReferenceException as stale_error:
-    # Обработка устаревшего элемента
         print(f"Произошла ошибка StaleElementReferenceException: {stale_error}")
-        # Возможно, здесь вы захотите попробовать выполнить дополнительные шаги для восстановления ситуации
-        return None
+
     except Exception as e:
         if ongoing:
             print("✔️   Это онгоинг, парсинг доступных серий прошел успешно")
@@ -329,9 +327,9 @@ def series_parser(driver, link, ongoing):
             return episodes_dict
         else:
             print("Ошибка", e)
-            traceback.print_exc() 
+            traceback.print_exc()
             return None
-    
+
     finally:
         driver.quit()
 
@@ -344,10 +342,8 @@ def image_parser(driver, xpath):
 
         
         image_url = image.get_attribute('srcset').split(' ')[0]
-        print(image_url)
         # Используем библиотеку requests для загрузки изображения
         response = requests.get(image_url)
-
         # Проверяем успешность запроса
         if response.status_code == 200:
             # Получаем байт-код изображения
@@ -360,47 +356,66 @@ def image_parser(driver, xpath):
         print(f"Error: {e}")
         return None
 
+
 def additional_images_parser(driver):
     try:
         image1 = WebDriverWait(driver, 5).until(
-                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[1]/img'))
-                        ).get_attribute('src')
+                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[1]'))
+                ).get_attribute('href')
+        print("Получен 1 кадр (1)")
         image2 = WebDriverWait(driver, 5).until(
-                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[2]/img'))
-                        ).get_attribute('src')
+                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[2]'))
+                        ).get_attribute('href')
+        print("Получен 2 кадр (1)")
         image3 = WebDriverWait(driver, 5).until(
-                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[3]/img'))
-                        ).get_attribute('src')
+                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[3]'))
+                        ).get_attribute('href')
+        print("Получен 3 кадр (1)")
+    except:
+        try:
+            image1 = WebDriverWait(driver, 5).until(
+                        EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[1]'))
+                ).get_attribute('href')
+            print("Получен 1 кадр (2)")
+            image2 = WebDriverWait(driver, 5).until(
+                            EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[2]'))
+                            ).get_attribute('href')
+            print("Получен 2 кадр (2)")
+            image3 = WebDriverWait(driver, 5).until(
+                            EC.presence_of_element_located((By.XPATH, f'//*[@id="screenshots-list"]/a[3]'))
+                            ).get_attribute('href')
+            print("Получен 3 кадр (2)")
+        except:
+            print("Кадры аниме не найдены")
+            return None
         
-        converted = []
-        unconverted = [image1, image2, image3]
+    converted = []
+    unconverted = [image1, image2, image3]
         
-        for image_url in unconverted:
-            response = requests.get(image_url)
+    for image_url in unconverted:
+        response = requests.get(image_url)
+        print("Ответ получен")
 
         # Проверяем успешность запроса
-            if response.status_code == 200:
-                # Получаем байт-код изображения
-                image_bytes = BytesIO(response.content)
-                converted.append(image_bytes)
-            else:
-                print(f"Failed to fetch image. Status code: {response.status_code}")
-                return None
+        if response.status_code == 200:
+            print("Ответ получен")
+            image_bytes = BytesIO(response.content)
+            converted.append(image_bytes)
+            print("Байт-код получен и добавлен в список")
+        else:
+            print(f"Failed to fetch image. Status code: {response.status_code}")
+            return None
+    print("Возвращаем байт-коды кадров")
+    return converted
         
-        return converted
-            
-    except:
-        print("Кадры с аниме не найдены")
-        return None
-    
-    
+
 def image_saver(image_bytes_io):
     try:
-        # Генерируем уникальное имя файла
-        unique_filename = str(uuid.uuid4()) + '.jpg'
-
         # Открываем изображение с помощью PIL
         img = Image.open(image_bytes_io)
+
+        # Преобразуем изображение к режиму RGB
+        img = img.convert('RGB')
 
         # Создаем объект BytesIO для сохранения изображения
         img_io = BytesIO()
@@ -408,7 +423,7 @@ def image_saver(image_bytes_io):
 
         # Создаем объект InMemoryUploadedFile с уникальным именем файла
         img_file = InMemoryUploadedFile(
-            img_io, None, unique_filename, 'image/jpeg', img_io.tell(), None
+            img_io, None, f"{uuid.uuid4()}.jpg", 'image/jpeg', img_io.tell(), None
         )
 
         # Возвращаем объект InMemoryUploadedFile
@@ -417,6 +432,19 @@ def image_saver(image_bytes_io):
         print(f"Error: {e}")
         return None
 
+def additional_names_parser(driver):
+    
+    lst = []
+    for i in range(1, 4):
+        try:
+            name = WebDriverWait(driver, 5).until(
+                        EC.presence_of_element_located((By.XPATH, f'//*[@id="content"]/div/div[1]/div[2]/div[2]/div/div/div[1]/ul/li[{i}]'))
+                    ).text
+            lst.append(name)
+        except:
+            break
+    return lst if lst else None
+    
 def description_parser(driver, link, start_range,stop_range, i_plus_required):
     description_dict = {}
     for i in range(start_range,stop_range):
@@ -451,150 +479,101 @@ def description_parser(driver, link, start_range,stop_range, i_plus_required):
 
 
 def parser(link):
-        driver = webdriver.Firefox()
-        driver.get(link)
-        ongoing = False
-        film = False
-        data = {}
-        if link == 'https://animego.org':
-            return None
-            # Получение даных для проверки типа аниме 
-        try:
-            name = WebDriverWait(driver, 5).until(
-                EC.presence_of_element_located((By.XPATH, "//*[@id='content']/div/div[1]/div[2]/div[2]/div/h1"))
-            ).text
-            ongoing_check = WebDriverWait(driver, 5).until(
-                        EC.presence_of_element_located((By.XPATH, f'//*[@id="content"]/div/div[1]/div[2]/div[3]/dl/dt[1]'))
-                        ).text
-            ani_type_check = WebDriverWait(driver, 5).until(
-                        EC.presence_of_element_located((By.XPATH, f'//*[@id="content"]/div/div[1]/div[2]/div[3]/dl/dd[1]'))
-                        ).text
-            ani_type = WebDriverWait(driver, 5).until(
-                    EC.presence_of_element_located((By.XPATH, f'//*[@id="content"]/div/div[1]/div[2]/div[3]/dl/dd[2]'))
-                    ).text
-        except Exception as e:
-            print(f"Произошла ошибка: {e}")
-            traceback.print_exc()
-            return None
+    driver = webdriver.Firefox()
+    driver.get(link)
+    ongoing = False
+    film = False
+    data = {}
 
-        title = name 
-            # Проверка на тип аниме в ссылке
-        if ani_type == 'Фильм':
-                film = True
+    if link == 'https://animego.org':
+        return None
 
-        if ongoing_check != 'Следующий эпизод':
-            if ani_type == '1':
-                    film = True
-            if ani_type_check == 'Фильм':
-                    film = True
-        else:
-            ongoing = True
-            
-        if film:
-            start_range = 1
-            stop_range = 9
-            i_plus_required = False
-        elif ongoing:
-            start_range = 2
-            stop_range = 13
-            i_plus_required = True  
-        else:
-            start_range = 1
-            stop_range = 12
-            i_plus_required = False
+    try:
+        name = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.XPATH, "//*[@id='content']/div/div[1]/div[2]/div[2]/div/h1"))
+        ).text
+        ongoing_check = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.XPATH, f'//*[@id="content"]/div/div[1]/div[2]/div[3]/dl/dt[1]'))
+        ).text
+        ani_type_check = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.XPATH, f'//*[@id="content"]/div/div[1]/div[2]/div[3]/dl/dd[1]'))
+        ).text
+        ani_type = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.XPATH, f'//*[@id="content"]/div/div[1]/div[2]/div[3]/dl/dd[2]'))
+        ).text
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
+        traceback.print_exc()
+        return None
 
-        image = image_parser(driver, link)
-        additional_images = additional_images_parser(driver)
-        data['Обложка'] = image
-        data['Кадры'] = additional_images
-        description = description_parser(driver, link, start_range, stop_range, i_plus_required)
-        
-        
-            
-        actions = ActionChains(driver)
+    title = name
+
+    if ani_type == 'Фильм':
+        film = True
+
+    if ongoing_check != 'Следующий эпизод':
+        if ani_type == '1':
+            film = True
+        if ani_type_check == 'Фильм':
+            film = True
+    else:
+        ongoing = True
+
+    start_range, stop_range, i_plus_required = (
+        (1, 9, False) if film else (2, 13, True) if ongoing else (1, 12, False)
+    )
+
+    data['Обложка'] = image_parser(driver, link)
+    data['Кадры'] = additional_images_parser(driver)
+    data['Другие названия'] = additional_names_parser(driver)
+    description = description_parser(driver, link, start_range, stop_range, i_plus_required)
+
+    actions = ActionChains(driver)
+    for _ in range(5):
+        actions.send_keys(Keys.PAGE_UP).perform()
+
+    try:
         actions.send_keys(Keys.PAGE_DOWN).perform()
+        button18 = WebDriverWait(driver, 7).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="video-player"]/div[1]/div/div[2]/button[2]'))
+        )
+        print("✔️18+ обнаружено")
+        button18.click()
+        print("✔️18+ пройдено")
+    except Exception:
+        print("18+ не обнаружено")
 
-        try:
-            button18 = WebDriverWait(driver, 7).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@id="video-player"]/div[1]/div/div[2]/button[2]'))
-            )
-            print("✔️18+ обнаружено")
-            button18.click()
-            print("✔️18+ пройдено")
-        except:
-            try:
-                actions.send_keys(Keys.PAGE_DOWN).perform()
-                button18 = WebDriverWait(driver, 7).until(
-                    EC.presence_of_element_located((By.XPATH, '//*[@id="video-player"]/div[1]/div/div[2]/button[2]'))
-                )
-                print("✔️18+ обнаружено")
-                button18.click()
-                print("✔️18+ пройдено")
-            except:
-                print("18+ не обнаружено")
-        for i in range(5):
-            actions.send_keys(Keys.PAGE_UP).perform()
-            actions.send_keys(Keys.PAGE_UP).perform()
-            actions.send_keys(Keys.PAGE_UP).perform()
-        try:
-            actions.send_keys(Keys.PAGE_DOWN).perform()
-            player_select_btn = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, '//*[@id="video-players-tab"]'))
-                    )
-            player_select_btn.click()
-        except:
-            try:
-                actions.send_keys(Keys.PAGE_DOWN).perform()
-                player_select_btn = WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located((By.XPATH, '//*[@id="video-players-tab"]'))
-                    )
-                player_select_btn.click()
-            except:
-                print('Нету плеера')
-                driver.quit()
-                return None
+    for _ in range(3):
+        actions.send_keys(Keys.PAGE_UP).perform()
 
-        if film:
-            anime = film_parser(driver, link)
-            data['type'] = 'Film'
-            
-        else:
-            anime = series_parser(driver, link, ongoing)
-            data['type'] = 'Anime'
-        
-        if anime == None:
-            return None
-        else: 
-            data['Название'] = title
-            data['Характеристики'] = description
-            data['Плеер'] = anime
-            data['Обложка'] = image
+    try:
+        actions.send_keys(Keys.PAGE_DOWN).perform()
+        player_select_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="video-players-tab"]'))
+        )
+        player_select_btn.click()
+    except Exception:
+        print('Нету плеера')
         driver.quit()
-        return data
+        return None
+
+    if film:
+        anime = film_parser(driver, link)
+        data['type'] = 'Film'
+    else:
+        anime = series_parser(driver, link, ongoing)
+        data['type'] = 'Anime'
+
+    if anime is None:
+        return None
+    else:
+        data['Название'] = title
+        data['Характеристики'] = description
+        data['Плеер'] = anime
+
+    driver.quit()
+    return data
     
 
 print(links_parser('D:\.prog\lunime-repo\lunime-\main\links.txt'))
-# print(image_parser('https://animego.org/anime/monolog-farmacevta-2422'))
 # print(animego_link_parser('https://animego.org/anime?sort=r.rating&direction=desc&type=animes&page='))
-# data = {'Название': 'Мастера Меча Онлайн: Алисизация — Война в Подмирье 2', 'Характеристики': {'Тип': 'ТВ Сериал', 'Эпизоды': '11', 'Статус': 'Вышел', 'Жанр': 'Игры, Приключения, Романтика, Фэнтези, Экшен', 'Первоисточник': 'Легкая новвела', 'Сезон': 'Лето 2020', 'Выпуск': 'с 12 июля 2020 по 20 сентября 2020', 'Студия': 'A-1 Pictures Inc.', 'Рейтинг MPAA': 'NC-17', 'Возрастные ограничения': '18+', 'Длительность': '24 мин. ~ серия', 'Описание': 'Вторая часть аниме «Мастера Меча Онлайн: Алисизация — Война в Подмирье».\n\nЧтобы спасти Андерворлд, Кирито, Юджио, Алисе и всем их союзникам необходимо найти способ разбить армию Дарк Территори.'}, 'Плеер': {1: '//kodik.info/seria/685108/6a9808e89588cc54a7bf64d9fc7fa711/720p', 2: '//kodik.info/seria/689270/6d9aed56a45a3562ca589ce4368c3791/720p', 3: '//kodik.info/seria/693007/2f97934d4f239094eaab9a82a5c255f2/720p', 4: '//kodik.info/seria/697296/7a58d479f21b022adb876c5811da7e81/720p', 5: '//kodik.info/seria/702487/1ca76eecb5bb37f926dabf19be836e05/720p', 6: '//kodik.info/seria/705918/bb8efdf8ed944dc2454bee2daa4aa3e9/720p', 7: '//kodik.info/seria/710490/457a9de3d1a486fdc9d240a840c05db5/720p', 8: '//kodik.info/seria/715329/c8fcd45c51c7981e68586e5abf81f179/720p', 9: '//kodik.info/seria/717675/07ca3512dbbd4187d457cf787b8a2c85/720p', 10: '//kodik.info/seria/719141/a65f57d871ba374b29f00d060f979630/720p', 11: '//kodik.info/seria/720494/6c82aeeeb915677c1c7ed7b207fe77b0/720p'}}
-
-# # # Преобразование вложенного словаря в основной словарь
-# # print(data)
-# title = data['Название']
-# data_description = data['Характеристики']
-# a_type = data_description['Тип']
-# amount_of_episodes = data_description['Эпизоды']
-# status = data_description['Статус']
-# genres = data_description['Жанр'].split(', ')
-# origin_sourse = data_description['Первоисточник']
-# release = data_description['Выпуск']
-# studio = data_description['Студия']
-# duration = data_description['Длительность']
-# description = data_description['Описание']
-# print(description)
-
-# for key, value in data['Плеер'].items():
-#     print(key, value)
-    
-# for genre in genres:
-#     print(genre)
