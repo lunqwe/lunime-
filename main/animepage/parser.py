@@ -576,4 +576,5 @@ def parser(link):
     
 
 print(links_parser('D:\.prog\lunime-repo\lunime-\main\links.txt'))
-# print(animego_link_parser('https://animego.org/anime?sort=r.rating&direction=desc&type=animes&page='))
+
+print(animego_link_parser('https://animego.org/anime?sort=r.rating&direction=desc&type=animes&page='))

@@ -134,6 +134,22 @@
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     border-radius: 15px;
+    transition: transform 0.2s ease-in-out;
+  }
+
+.update-block-title {
+    height: 120px;
+    width: 300px;
+    display: flex;
+    border: 10px;
+    background-color: #3d3c3c;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+  }
+
+.update-block:hover {
+    transform: scale(1.1); /* Увеличиваем масштаб при наведении на 10% */
   }
   
   .image-container {
@@ -160,3 +176,54 @@
 .sorting-block {
     margin-right: 10px; /* Регулирует расстояние между блоками (можете настроить по вашему вкусу) */
 }
+
+a {
+    text-decoration: none; /* Убрать подчеркивание */
+    color: inherit; /* Использовать цвет по умолчанию */
+    cursor: pointer; /* Изменить курсор при наведении */
+  }
+  
+a:hover {
+    text-decoration: none; /* Поддерживать состояние "наведение" */
+  }
+
+  .sorting-block {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #333; /* Цвет фона блока */
+    color: #fff; /* Цвет текста */
+    padding: 10px; /* Внутренний отступ */
+  }
+  
+  .form-select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #555; /* Цвет рамки */
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    width: 150px;
+    background-color: #444; /* Цвет фона select */
+    color: #fff; /* Цвет текста select */
+  }
+  
+  .form-select:hover {
+    border-color: #fff; /* Изменение цвета рамки при наведении */
+  }
+  
+  .form-select:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  .form-select option {
+    background-color: #2b2b2b; /* Цвет фона для option */
+    color: #fff; /* Цвет текста для option */
+    border-radius: 20%;
+  }
+  
+  .form-select option:hover {
+    background-color: #555; /* Изменение цвета фона для option при наведении */
+  }
