@@ -227,3 +227,51 @@ a:hover {
   .form-select option:hover {
     background-color: #555; /* Изменение цвета фона для option при наведении */
   }
+
+  .form-check-input {
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    outline: none;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.form-check-input::before {
+    content: "";
+    position: absolute;
+    top: 65%; /* 50% + 5px отступ вниз */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    border: 1px solid #333;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s;
+}
+
+.form-check-input:checked::before {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.form-check-input::after {
+    content: "";
+    position: absolute;
+    top: 55%; /* 50% + 5px отступ вниз */
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    width: 10px;
+    height: 5px;
+    border-bottom: 2px solid #fff;
+    border-left: 2px solid #fff;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.form-check-input:checked::after {
+    opacity: 1;
+}
