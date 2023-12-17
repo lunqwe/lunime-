@@ -145,7 +145,7 @@
 /* hover effect on button width */
 .Btn:hover {
   outline: none;
-  width: 70px;
+  width: 100px;
   border-radius: 5px;
   transition-duration: .3s;
   color: black;
@@ -153,7 +153,7 @@
 
 .Btn:hover .sign {
   outline: none;
-  width: 30%;
+  width: 10%;
   transition-duration: .3s;
   padding-left: 20px;
 }
@@ -278,4 +278,68 @@ a.Btn-a:hover{
   box-sizing: border-box;
   fill: white;
   font-size: 1.3em;
+}
+
+.suggestions-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  background-color: #2e2e2e;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 1000;  /* Устанавливаем z-index для подсказок, чтобы они отображались поверх всего контента */
+  max-height: 520px; /* Максимальная высота блока подсказок, чтобы ограничить его размер */
+  width: 350px;
+  overflow-y: auto; /* Добавляем прокрутку, если блок подсказок выходит за пределы максимальной высоты */
+  
+  /* Позиционирование блока справа от поля ввода */
+  top: 50px;
+  left: calc(0% - 150px);  /* Расстояние от правого края поля ввода */
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #000000;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.suggestion-item:hover {
+  background-color: #f9f9f9;
+}
+
+.suggestion-item img {
+  width: 60px;
+  height: 80px;
+  margin-right: 20px;
+  border-radius: 5px;
+  object-fit: cover;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item div {
+  flex-grow: 1;
+}
+
+.suggestion-item div > div {
+  margin-bottom: 5px;
+}
+
+.suggestion-item button {
+  margin-left: 20px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.suggestion-item button:hover {
+  background-color: #0056b3;
 }

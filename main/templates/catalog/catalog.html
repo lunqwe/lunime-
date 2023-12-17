@@ -3,114 +3,169 @@
 {% block title %}Каталог{% endblock title %}
 {% block css %} <link rel="stylesheet" href="{% static "css/catalog/catalog.css" %}" type="text/css"/>{% endblock %}
 {% block content %}
-<div class='anime-description' style='background-color: white' width>
-    <h1 class="display-1" style="margin-left: 15px">Каталог аниме</h1>
+<div class="anime-description">
+    <h1 class="display-1">Каталог аниме</h1>
     <div class="catalog-block">
-        <h2 class="display-1" style="margin-left: 10px">Жанры</h2>
+        <h2 class="display-2">Жанры</h2>
         <ul class="products">
             {% for genre in genres %}
-            <li class="genre">
-                <a href='/catalog/genre/{{ genre.id }}'>
-                    <div class="thumbnail">
-                        <img src="{{ genre.image.url }}">
-                    </div>
-                    <div class="caption">
-                        <p>{{ genre.name }}</p>
-                    </div>
-                </a>
-            </li>
+                <li class="genre">
+                    <a href='/catalog/genre/{{ genre.id }}'>
+                        <div class="thumbnail">
+                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                        </div>
+                        <div class="caption">
+                            <p>{{ genre.name }}</p>
+                        </div>
+                    </a>
+                </li>
             {% endfor %}
             <li class="genre-button">
                 <a href='/catalog/genres'>
                     <div class="genre-button-text">
-                        <p> → </p>
+                        <p style='margin-top: 130px'> → </p>
                     </div>
                 </a>
             </li>
         </ul>
-    </div>
 
-    <div class="catalog-block" style='margin-bottom: 10px;'>
-        <h2 class="display-1" style="margin-left: 10px">Сезоны</h2>
+        <h2 class="display-2" style='margin-top: 50px;'>Аниме</h2>
         <ul class="products">
-            <li class="genre">
-                <a href='/catalog'>
-                    <div class="thumbnail">
-                        <img src="{% static "images/drstone.png" %}">
-                    </div>
-                    <div class="caption">
-                        <p>Осень 2023</p>
-                    </div>
-                </a>
-            </li>
-            <li class="genre">
-                <a href='/catalog'>
-                    <div class="thumbnail">
-                        <img src="{% static "images/jutsu.jpg" %}" alt="Товар 1">
-                    </div>
-                    <div class="caption">
-                        <p>Лето 2023</p>
-                    </div>
-                </a>
-            </li>
-            <li class="genre">
-                <a href='/catalog'>
-                    <div class="thumbnail">
-                        <img src="{% static "images/klinok.png" %}" alt="Товар 1">
-                    </div>
-                    <div class="caption">
-                        <p>Весна 2023</p>
-                    </div>
-                </a>
-            </li>
-            <li class="genre">
-                <a href='/catalog'>
-                    <div class="thumbnail">
-                        <img src="{% static "images/vinland.png" %}" alt="Товар 1">
-                    </div>
-                    <div class="caption">
-                        <p>Зима 2023</p>
-                    </div>
-                </a>
-            </li>
-            <li class="genre">
-                <a href='/catalog'>
-                    <div class="thumbnail">
-                        <img src="{% static "images/block.png" %}" alt="Товар 1">
-                    </div>
-                    <div class="caption">
-                        <p>Осень 2022</p>
-                    </div>
-                </a>
-            </li>
+            {% for genre in genres %}
+                <li class="genre">
+                    <a href='/catalog/genre/{{ genre.id }}'>
+                        <div class="thumbnail">
+                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                        </div>
+                        <div class="caption">
+                            <p>{{ genre.name }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
             <li class="genre-button">
-                <a href='/catalog/seasons'>
+                <a href='/catalog/genres'>
                     <div class="genre-button-text">
-                        <p> → </p>
+                        <p style='margin-top: 130px'> → </p>
                     </div>
                 </a>
             </li>
         </ul>
-    </div>
-</div>
 
-<div class="anime-description">
-    <a href='/'>
-        <h2>Новые аниме на сайте</h2>
-    </a>
-    {% for anime in anime_list %}
-            <div style="display: flex; align-items: flex-start; margin-bottom: 30px;">
-                <img class="thumbnail" style="margin-top: 10px; margin-left: 10px;" alt="" src="{{ anime.image.url }}" width=165 height=235>
-                <div class="updates-text" style="margin-left: 15px; margin-top: 10px">
-                    <a href='/anime/{{ anime.id }}'>
-                        <p style="margin: 0; font-size: 20px">{{ anime.title }}</p>
+        <h2 class="display-2">Фильмы</h2>
+        <ul class="products">
+            {% for genre in genres %}
+                <li class="genre">
+                    <a href='/catalog/genre/{{ genre.id }}'>
+                        <div class="thumbnail">
+                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                        </div>
+                        <div class="caption">
+                            <p>{{ genre.name }}</p>
+                        </div>
                     </a>
-                    <p class="news-text-additional" style='margin-top: 10px; font-size: 15px'>{% for genre in anime.genres.all %} <a href='/catalog/genre/{{ genre.id }}'>{{ genre.name }}</a> / {% endfor %}</p>
-                    <div class="container-fixed narrow-container">
-                        <p class="news-text-additional" style="margin-top: 30px; font-size: 15px">{{ anime.description|slice:":550" }}{% if anime.description|length > 550 %}...{% endif %} </p>
+                </li>
+            {% endfor %}
+            <li class="genre-button">
+                <a href='/catalog/genres'>
+                    <div class="genre-button-text">
+                        <p style='margin-top: 130px'> → </p>
                     </div>
-                </div>
-            </div>
-    {% endfor %}
+                </a>
+            </li>
+        </ul>
+
+        <h2 class="display-2">OVA</h2>
+        <ul class="products">
+            {% for genre in genres %}
+                <li class="genre">
+                    <a href='/catalog/genre/{{ genre.id }}'>
+                        <div class="thumbnail">
+                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                        </div>
+                        <div class="caption">
+                            <p>{{ genre.name }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+            <li class="genre-button">
+                <a href='/catalog/genres'>
+                    <div class="genre-button-text">
+                        <p style='margin-top: 130px'> → </p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <h2 class="display-2">Пользовательские</h2>
+        <ul class="products">
+            {% for genre in genres %}
+                <li class="genre">
+                    <a href='/catalog/genre/{{ genre.id }}'>
+                        <div class="thumbnail">
+                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                        </div>
+                        <div class="caption">
+                            <p>{{ genre.name }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+            <li class="genre-button">
+                <a href='/catalog/genres'>
+                    <div class="genre-button-text">
+                        <p style='margin-top: 130px'> → </p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+        <h2 class="display-2">Спешл</h2>
+        <ul class="products">
+            {% for genre in genres %}
+                <li class="genre">
+                    <a href='/catalog/genre/{{ genre.id }}'>
+                        <div class="thumbnail">
+                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                        </div>
+                        <div class="caption">
+                            <p>{{ genre.name }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+            <li class="genre-button">
+                <a href='/catalog/genres'>
+                    <div class="genre-button-text">
+                        <p style='margin-top: 130px'> → </p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+        <h2 class="display-2">Пользовательские подборки</h2>
+        <ul class="products">
+            {% for genre in genres %}
+                <li class="genre">
+                    <a href='/catalog/genre/{{ genre.id }}'>
+                        <div class="thumbnail">
+                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                        </div>
+                        <div class="caption">
+                            <p>{{ genre.name }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+            <li class="genre-button">
+                <a href='/catalog/genres'>
+                    <div class="genre-button-text">
+                        <p style='margin-top: 130px'> → </p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+    </div>
 </div>
 {% endblock content %}

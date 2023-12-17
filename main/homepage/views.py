@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.db.models import Q
 from django.db.models import Count
+from django.views.decorators.csrf import csrf_exempt
 
 
 def insertion_sort(objects, selected_genres=None):
@@ -100,6 +101,52 @@ def get_anime(request):
     }
     return JsonResponse(context, safe=False)
 
+@csrf_exempt  # Используется только для упрощения примера, рекомендуется использовать CSRF-токены в реальных проектах
+def search_suggestions(request):
+    query = request.GET.get('q', '')
+
+    print(f"Received search query: {query}")
+
+    anime_results = Anime.objects.filter(title__icontains=query)
+    film_results = Film.objects.filter(title__icontains=query)
+
+    suggestions = []
+    for anime in anime_results:
+        suggestion = {
+            'id': anime.id,
+            'title': anime.title,
+            'type': anime.anime_type,
+            'image_url': anime.image.url,
+            'check_type': anime.temp_type
+        }
+        suggestions.append(suggestion)
+    
+    for film in film_results:
+        suggestion = {
+            'id': film.id,
+            'title': film.title,
+            'type': film.anime_type,
+            'image_url': film.image.url,
+            'check_type': film.temp_type,
+        }
+        suggestions.append(suggestion)
+        
+    print(f"Returning suggestions: {suggestions}")
+
+    return JsonResponse({'suggestions': suggestions})
+
+def search_result(request):
+    query = request.GET.get('q', '')
+    anime_results = Anime.objects.filter(title__icontains=query)
+    film_results = Film.objects.filter(title__icontains=query)
+    combined_objects = list(chain(anime_results, film_results))
+    
+    context = {
+        'query': query,
+        'results': combined_objects,
+    }
+
+    return render(request, 'catalog/search-result.html', context)
 
 def registration(request):
     return render(request, "registration/registration.html")

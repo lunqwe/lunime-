@@ -1,344 +1,117 @@
+.anime-description {
+  width: 100%;
+  padding: 20px;
+  margin-left: 50px;
+}
+
+.display-1 {
+  margin-left: 15px;
+  font-weight: bold;
+  color: white;
+}
+
+.display-2 {
+  margin-left: 15px;
+  font-weight: bold;
+  color: white;
+}
+
 .catalog-block {
-    width: 950px;
-    height: 325px;
-    padding: 10px;
+  margin-left: 10px;
 }
 
 .products {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    list-style-type: none;
-    }
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  border: none;
+}
 
-.thumbnail {
-    position: relative;
-    overflow: hidden;
-    }
+.genre{
+  width: 270px;
+  height: 390px;
+  margin-right: 10px;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+}
 
-
-.genre {
-    padding: 5px;
-    margin-right: 5px;
+.genre:hover {
+  margin-left: 10px;
+  margin-bottom: 0;
 }
 .genre-button {
-    margin-top: 5px;
-    width: 50px;
-    border-right: 1px solid #eee;
-    padding: 5px;
-    margin-right: 5px;
-    background-color: rgb(155, 154, 154);
-    height: 243px;
-}
-.genre-button-text {
-    display: flex;
-    justify-content: center; /* Горизонтальное выравнивание по центру */
-    align-items: center; /* Вертикальное выравнивание по центру */
-    height: 100%; /* Устанавливаем высоту блока на 100%, чтобы выравнивание работало по вертикали */
-    color: white;
-    font-size: 30px;
+  position: relative;
+  width: 192px;
+  height: 230px;
+  overflow: hidden;
+  border: none;
 }
 
-/* Убираем правую границу у последнего товара в списке */
-.genre .genre:last-child {
-    border-right: none;
+.thumbnail {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  width: 270px;
+  height: 390px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0);
+  transition: all 0.3s ease;
+}
+
+
+.thumbnail img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: none;
+  transition: transform 0.3s ease;
+}
+
+.thumbnail:hover {
+  padding: auto;
+  transform: scale(1.1);
+  border-radius: 10px;
+  margin-top: 30px;
 }
 
 .caption {
-    position: absolute;
-    bottom: 10px;
-    left: 5;
-    width: 100%;
-    color: #fff;
-    font-size: 20px !important;
-    padding: 10px; /* Добавим отступы для текста */
-    box-sizing: border-box;
+  position: absolute;
+  padding: 10px;
+  font-size: 20px;
+  color: white;
+  margin-top: -70px;
+  margin-left: 10px;
 }
 
-.thumbnail {
-    position: relative;
-    overflow: hidden;
+.thumbnail::before {
+  content: "";
+  position: absolute;
+  width: 97.5%;
+  height: 97.5%;
+  border-radius: 10px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
 }
 
-.thumbnail img {
-    width: 165px;
-    height: 235px;
+.caption p {
+  margin: 0;
+}
+.genre-button{
+  height: 390px;
+  width: 60px;
 }
 
-.thumbnail::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 300px;
-    height: 365px;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
-}
-
-.updates-text {
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-.main-block {
-    width: 1000px;
-    height: 350px;
-    padding: 10px;
-}
-
-.anime-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    }
-
-.anime-block {
-        padding: 5px;
-        margin-right: 5px;
-        width: 1000px;
-        height: 285px;
-        margin-bottom: 10px;
-        color: black;
-    }
-
-.updates-text {
-        font-size: 14px;
-        color: black;
-        font-weight: bold;
-      }
-      
-.news-text-main {
-        font-size: 14px;
-        font-weight: bold;
-        color: black;
-      }
-      
-.news-text-additional {
-        font-weight: normal;
-      }
-.text-additional {
-        font-weight: normal;
-        color: black;
-      }
-      
-.narrow-container {
-        width: 650px;
-        height: 150px;
-      }
-
-.block{
-    background-color: #e0e0e0; /* Замените на нужный вам цвет */
-}
-
-.anime-description {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    width: 1000px;
-    height: auto;
-    margin-bottom: 30px;
-  }
-
-  .news-text-main {
-    font-size: 14px;
-    font-weight: bold;
-  }
+.genre-button-text {
+  background-color: #575757;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 40px;
+  font-weight: bolder;
+  height: 390px;
+  width: 60px;
   
-  .news-text-additional {
-    font-weight: normal;
-  }
-  
-  .text-additional {
-    font-weight: normal;
-  }  
-
-.list-block ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    border: 1px solid #ddd;
-    border-collapse: collapse;
-    width: 100%;
-}
-
-.list-block li {
-    border-bottom: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-    display: flex;
-    justify-content: space-between; /* Добавленный стиль для выравнивания по горизонтали */
-    align-items: center; /* Выравнивание по вертикали */
-}
-
-.list-block li a {
-    text-decoration: none;
-    color: inherit;
-    width: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.list-block li a.btn.btn-secondary {
-  font-size: 15px; /* Замените 16px на желаемый размер шрифта */
-  width: 100%; /* Замените 120px на желаемую ширину кнопки */
-  height: 26px; /* Замените 40px на желаемую высоту кнопки */
-  /* Другие стили здесь */
-  text-decoration: none;
-  color: inherit;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.list-block li p {
-    font-size: 15px;
-    margin: 0;
-}
-
-.list-block li .text-block {
-    display: flex;
-    flex-direction: column; /* Стиль для выравнивания элементов текста в столбец */
-    align-items: flex-end; /* Стиль для выравнивания по вертикали в конец */
-    margin-left: auto;
-}
-
-.list-image {
-    width: 70px;
-    height: 70px;
-    overflow: hidden;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.list-image-rounded {
-    width: 100%;
-    height: auto;
-}
-
-.list-block li:last-child {
-    border-bottom: none;
-}
-
-.list-block li:nth-child(odd) {
-    background-color: #F0F0F0;
-}
-
-/* Стили для картинки */
-.new-list-image {
-  text-align: center; /* Центрирование изображения */
-}
-
-.new-list-image img.new-list-image-rounded {
-  border-radius: 50%; /* Закругление углов изображения */
-  max-width: 100%; /* Максимальная ширина изображения по родительскому контейнеру */
-  height: auto; /* Сохранение пропорций изображения */
-}
-
-/* Стили для основного текста */
-a {
-  text-decoration: none; /* Убираем подчеркивание для ссылки */
-  color: #333; /* Цвет текста для ссылки */
-}
-
-.updates-text {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.text-block {
-  margin-top: 11px;
-}
-
-.description-text {
-  font-size: 14px;
-  font-style: italic;
-}
-
-  
-.news-text-main {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.news-text-additional {
-  font-weight: normal;
-}
-
-.text-additional {
-  font-weight: normal;
-}
-
-.narrow-container {
-  width: 650px;
-  height: 150px;
-}
-
-.anime-description {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 1000px;
-  height: 410px;
-}
-
-.main-container {
-  width: 1000px;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
-.anime-container {
-  display: flex;
-  margin-top: 50px;
-  margin-bottom: 0; /* Добавьте эту строку */
-}
-
-.anime-image {
-  flex: 0 0 auto; /* Измените это */
-  margin-right: 20px;
-}
-
-.anime-image img {
-  width: 305px;
-  height: 410px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.anime-description {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  width: 1000px;
-  height: auto;
-  margin-bottom: 30px;
-}
-
-.description {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 1000px;
-  height: auto;
-}
-
-.anime-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.anime-info {
-  font-size: 16px;
-  color: #000000;
 }
