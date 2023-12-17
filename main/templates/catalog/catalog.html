@@ -29,16 +29,22 @@
             </li>
         </ul>
 
-        <h2 class="display-2" style='margin-top: 50px;'>Аниме</h2>
+        <h2 class="display-2">Аниме</h2>
         <ul class="products">
-            {% for genre in genres %}
+            {% for anime in anime_list %}
                 <li class="genre">
-                    <a href='/catalog/genre/{{ genre.id }}'>
+                    <a href="/anime/{{ anime.id }}">
                         <div class="thumbnail">
-                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                            <img src="{{ anime.image.url }}" alt="{{ anime.title }}">
                         </div>
                         <div class="caption">
-                            <p>{{ genre.name }}</p>
+                            <p>
+                                {% if anime.title|length > 20 %}
+                                  {{ anime.title|slice:":20" }}...
+                                {% else %}
+                                  {{ anime.title }}
+                                {% endif %}
+                              </p>
                         </div>
                     </a>
                 </li>
@@ -46,7 +52,7 @@
             <li class="genre-button">
                 <a href='/catalog/genres'>
                     <div class="genre-button-text">
-                        <p style='margin-top: 130px'> → </p>
+                        <p> → </p>
                     </div>
                 </a>
             </li>
@@ -54,14 +60,20 @@
 
         <h2 class="display-2">Фильмы</h2>
         <ul class="products">
-            {% for genre in genres %}
+            {% for film in films %}
                 <li class="genre">
-                    <a href='/catalog/genre/{{ genre.id }}'>
+                    <a href='/anime/film/{{ film.id }}'>
                         <div class="thumbnail">
-                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                            <img src="{{ film.image.url }}" alt="{{ film.title }}">
                         </div>
                         <div class="caption">
-                            <p>{{ genre.name }}</p>
+                            <p>
+                                {% if film.title|length > 20 %}
+                                  {{ film.title|slice:":20" }}...
+                                {% else %}
+                                  {{ film.title }}
+                                {% endif %}
+                              </p>
                         </div>
                     </a>
                 </li>
@@ -77,14 +89,20 @@
 
         <h2 class="display-2">OVA</h2>
         <ul class="products">
-            {% for genre in genres %}
+            {% for ova in ova_list %}
                 <li class="genre">
-                    <a href='/catalog/genre/{{ genre.id }}'>
+                    <a href='/catalog/genre/{{ ova.id }}'>
                         <div class="thumbnail">
-                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                            <img src="{{ ova.image.url }}" alt="{{ ova.title }}">
                         </div>
                         <div class="caption">
-                            <p>{{ genre.name }}</p>
+                            <p>
+                                {% if ova.title|length > 20 %}
+                                  {{ ova.title|slice:":20" }}...
+                                {% else %}
+                                  {{ ova.title }}
+                                {% endif %}
+                              </p>
                         </div>
                     </a>
                 </li>
@@ -97,16 +115,22 @@
                 </a>
             </li>
         </ul>
-        <h2 class="display-2">Пользовательские</h2>
+        <h2 class="display-2">ONA</h2>
         <ul class="products">
-            {% for genre in genres %}
+            {% for ona in ona_list %}
                 <li class="genre">
                     <a href='/catalog/genre/{{ genre.id }}'>
                         <div class="thumbnail">
-                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                            <img src="{{ ona.image.url }}" alt="{{ ona.title }}">
                         </div>
                         <div class="caption">
-                            <p>{{ genre.name }}</p>
+                            <p>
+                                {% if ona.title|length > 20 %}
+                                  {{ ona.title|slice:":20" }}...
+                                {% else %}
+                                  {{ ona.title }}
+                                {% endif %}
+                              </p>
                         </div>
                     </a>
                 </li>
@@ -122,14 +146,24 @@
 
         <h2 class="display-2">Спешл</h2>
         <ul class="products">
-            {% for genre in genres %}
+            {% for special in specials_list %}
                 <li class="genre">
-                    <a href='/catalog/genre/{{ genre.id }}'>
+                    {% if special.temp_type == 'Anime'%}
+                    <a href="/anime/{{ special.id }}">
+                    {% elif special.temp_type == 'Film'%}
+                    <a href="/anime/film/{{ special.id }}">
+                    {% endif %}
                         <div class="thumbnail">
-                            <img src="{{ genre.image.url }}" alt="{{ genre.name }}">
+                            <img src="{{ special.image.url }}" alt="{{ special.title }}">
                         </div>
                         <div class="caption">
-                            <p>{{ genre.name }}</p>
+                            <p>
+                                {% if special.title|length > 20 %}
+                                  {{ special.title|slice:":20" }}...
+                                {% else %}
+                                  {{ special.title }}
+                                {% endif %}
+                              </p>
                         </div>
                     </a>
                 </li>

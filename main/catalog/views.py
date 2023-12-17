@@ -1,11 +1,33 @@
 from django.shortcuts import render
-from animepage.models import Anime, Genre
+from animepage.models import Anime, Genre, Film
+from itertools import chain
 
 # Create your views here.
 def catalog(request):
-    anime = Anime.objects.all()
+    anime = Anime.objects.all()[:5]
     genres = Genre.objects.all()[:5]
-    return render(request, "catalog/catalog.html", {"anime_list": anime, "genres": genres})
+    films = Film.objects.all()[:5]
+    anime_ova = Anime.objects.filter(anime_type='OVA')
+    film_ova = Film.objects.filter(anime_type='OVA')
+    ova_list = list(chain(anime_ova,film_ova))[:5]
+    anime_ona = Anime.objects.filter(anime_type='ONA')
+    film_ona = Film.objects.filter(anime_type='ONA')
+    ona_list = list(chain(anime_ona, film_ona))[:5]
+    anime_special = Anime.objects.filter(anime_type='Спешл')
+    film_special = Film.objects.filter(anime_type='Спешл')
+    specials_list = list(chain(anime_special, film_special))[:5]
+    
+    context = {
+        "anime_list": anime,
+        "films": films,
+        'genres': genres,
+        "ova_list": ova_list,
+        "ona_list": ona_list,
+        "specials_list": specials_list,
+    }
+    
+    
+    return render(request, "catalog/catalog.html", context)
 
 def genres(request):
     genres = Genre.objects.all().order_by('name')
