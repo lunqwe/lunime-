@@ -65,7 +65,7 @@
                     <iframe id="myIframe" src="{{ link.kodik_link }}" width=840 height=515 frameborder="0" allowfullscreen></iframe>
                 </center>
             </div>
-            <div id="buttonsContainer" style='margin-left: 330px; display: flex; align-items: center;'>
+            <div id="buttonsContainer" style='margin-left: 300px; display: flex; align-items: center;'>
                 <div class='episode-selector' id="episodeSelector" style="flex-grow: 1;">
                     <button class="prev-button" onclick="prevPage()"><</button>
                     {% for episode in episodes %}
@@ -192,7 +192,7 @@
     </script>
     <script>
         var itemsPerPage = 5; // Количество элементов на одной странице
-        var currentPage = 1; // Текущая страница
+        var currentPage = parseInt(getCookie("currentPage")) || 1; // Текущая страница
       
         function displayEpisodes(currentPage) {
           var episodeSelector = document.getElementById("episodeSelector");
@@ -211,6 +211,7 @@
         function prevPage() {
           if (currentPage > 1) {
             currentPage--;
+            setCookie("currentPage", currentPage, 365); // Сохраняем текущую страницу в cookies
             displayEpisodes(currentPage);
             highlightCurrentPage();
           }
@@ -223,6 +224,7 @@
       
           if (currentPage < totalPages) {
             currentPage++;
+            setCookie("currentPage", currentPage, 365); // Сохраняем текущую страницу в cookies
             displayEpisodes(currentPage);
             highlightCurrentPage();
           }
@@ -271,9 +273,25 @@
           currentPageSpan.innerHTML = currentPage;
         }
       
-        function changeSeries(link) {
-          // Ваш код для изменения серии
-          console.log("Changing series to: " + link);
+        function setCookie(name, value, days) {
+          var expires = "";
+          if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+          }
+          document.cookie = name + "=" + value + expires + "; path=/";
+        }
+      
+        function getCookie(name) {
+          var nameEQ = name + "=";
+          var ca = document.cookie.split(';');
+          for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+          }
+          return null;
         }
       
         // Инициализация
