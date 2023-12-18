@@ -1,7 +1,7 @@
 
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404
-from .models import Anime, Episode, AdditionalName, Genre, Film
+from .models import Anime, Episode, AdditionalName, Genre, Film, AdditionalImage, AdditionalFilmImage
 from .services import open_file
 
 
@@ -13,14 +13,34 @@ def get_anime(request, pk: int):
     anime = get_object_or_404(Anime, id=pk)
     episodes = Episode.objects.filter(anime=anime).order_by("n_episode")
     kodik_link = episodes[0]
-    additional_names = AdditionalName.objects.filter(title=anime)
+    additional_names = AdditionalName.objects.filter(anime=anime)
+    additional_images = AdditionalImage.objects.filter(anime=anime)
     
-    return render(request, "animepage/anime.html", {"anime": anime, "episodes": episodes, 'link': kodik_link})
+    
+    context = {
+        "anime": anime,
+        "episodes": episodes,
+        "link": kodik_link,
+        "additional_names": additional_names,
+        "additional_images": additional_images,
+    }
+    
+    return render(request, "animepage/anime.html", context)
 
 def get_film(request, pk: int):
     film = get_object_or_404(Film, id=pk)
     kodik_link = film.link
-    return render(request, "animepage/film.html", {"anime": film, 'link': kodik_link})
+    additional_images = AdditionalFilmImage.objects.filter(film=film)
+    
+    print(film.genres.all())
+    
+    context = {
+        "film": film,
+        "link": kodik_link,
+        "additional_images": additional_images,
+    }
+    
+    return render(request, "animepage/film.html", context)
 
 
 def get_streaming_video(request, pk: int):

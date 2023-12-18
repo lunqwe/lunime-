@@ -130,7 +130,7 @@
     width: 300px;
     display: flex;
     border: 10px;
-    background-color: #3d3c3c;
+    background-color: #202020;
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     border-radius: 15px;
@@ -142,7 +142,7 @@
     width: 300px;
     display: flex;
     border: 10px;
-    background-color: #3d3c3c;
+    background-color: #202020;
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     border-radius: 15px;
@@ -191,7 +191,7 @@ a:hover {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-    background-color: #333; /* Цвет фона блока */
+    background-color: rgba(0,0,0,0);
     color: #fff; /* Цвет текста */
     padding: 10px; /* Внутренний отступ */
   }
@@ -199,14 +199,14 @@ a:hover {
   .form-select {
     padding: 8px;
     font-size: 14px;
-    border: 1px solid #555; /* Цвет рамки */
     border-radius: 5px;
     margin-right: 10px;
     cursor: pointer;
     transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     width: 150px;
-    background-color: #444; /* Цвет фона select */
+    background-color: #202020; /* Цвет фона select */
     color: #fff; /* Цвет текста select */
+    border: none;
   }
   
   .form-select:hover {
@@ -219,13 +219,13 @@ a:hover {
   }
 
   .form-select option {
-    background-color: #2b2b2b; /* Цвет фона для option */
+    background-color: #202020; /* Цвет фона для option */
     color: #fff; /* Цвет текста для option */
     border-radius: 20%;
   }
   
   .form-select option:hover {
-    background-color: #555; /* Изменение цвета фона для option при наведении */
+    background-color: #202020; /* Изменение цвета фона для option при наведении */
   }
 
   .form-check-input {

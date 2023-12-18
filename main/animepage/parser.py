@@ -10,7 +10,7 @@ from selenium.common.exceptions import StaleElementReferenceException,  TimeoutE
 from django.core.files.base import ContentFile
 import traceback
 from .models import Anime, Genre, Episode, Film
-from .models import AdditionalImage, AdditionalFilmImage
+from .models import AdditionalImage, AdditionalFilmImage, AdditionalName
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO
 from PIL import Image
@@ -72,6 +72,7 @@ def links_parser(file_name):
                     description = data_description.get('Описание', '0')
                     image = image_saver(link_data.get('Обложка', ''))
                     additional_images = link_data.get('Кадры', "0")
+                    additional_names = link_data.get("Другие названия", "0")
                     
                     try:
                         check = Anime.objects.filter(title = title)
@@ -108,6 +109,9 @@ def links_parser(file_name):
                             
                             for image in additional_images:
                                 image_to_save = AdditionalImage.objects.create(anime=new_anime, image=image_saver(image))
+                                
+                            for name in additional_names:
+                                additional_name = AdditionalName.objects.create(anime=new_anime, name=name)
                                 
                             remove_first_line(file_name)
                     except Exception as e:
@@ -576,5 +580,4 @@ def parser(link):
     
 
 print(links_parser('D:\.prog\lunime-repo\lunime-\main\links.txt'))
-
-print(animego_link_parser('https://animego.org/anime?sort=r.rating&direction=desc&type=animes&page='))
+# print(animego_link_parser('https://animego.org/anime?sort=r.rating&direction=desc&type=animes&page='))

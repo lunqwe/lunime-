@@ -16,11 +16,11 @@ class Film(models.Model):
     image = models.ImageField()
     anime_type = models.CharField(max_length=255)
     genres = models.ManyToManyField(Genre)
-    origin_source = models.CharField(max_length=255)
-    description = models.CharField(max_length=1500)
-    duration = models.CharField(max_length=255)
-    date_published = models.CharField(max_length=255)
-    studio = models.CharField(max_length=255)
+    origin_source = models.CharField(max_length=255, default=0)
+    description = models.CharField(max_length=1500, default=0)
+    duration = models.CharField(max_length=255, default=0)
+    date_published = models.CharField(max_length=255, default=0)
+    studio = models.CharField(max_length=255, default=0)
     link = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     temp_type = models.CharField(max_length=255, default = 'Film')
@@ -71,5 +71,5 @@ class AdditionalFilmImage(models.Model):
         return self.film.title
 
 class AdditionalName(models.Model):
-    title_name = models.CharField(max_length=255)
-    title = models.ForeignKey(Anime, on_delete=models.CASCADE)
+    anime = models.ForeignKey(Anime, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)

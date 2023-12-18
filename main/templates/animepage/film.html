@@ -1,73 +1,172 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} {{ anime.title }} {% endblock title %}
+{% block title %} {{ film.title }} {% endblock title %}
 {% block css %}<link rel="stylesheet" href="{% static "css/animepage/animepage.css" %}" type="text/css"/>{% endblock css %}
 {% block content %}
-<div class="main-container">
-    <div class="anime-container">
-        <div class="anime-image">
-            <img src="{{ anime.image.url }}">
+<div class='background-banner' id="background-image">
+    <img src='{{ film.image.url }}'>
+</div>
+<div class='main-container'>
+    <div class='anime-container'>
+        <div class='anime-banner'>
+            <img src='{{ film.image.url }}'>
         </div>
-        <div class="anime-description">
-            <div class="anime-title">{{ anime.title }}</div>
-            {% for additional_name in additional_names %}
-            <p class="anime-info text-muted" style='font-size: 13px;'>{{ additional_name.title_name }}</p>
+        <div class='anime-description'>
+            <div class='anime-description-title'>
+                <p> {{ film.title }} </p>
+            </div>
+            <div class="anime-description-text">
+                <p><strong>Тип: </strong>{{ film.anime_type }}</p> 
+                {% if film.genres.all %}<p><strong>Жанр: </strong>{% for genre in film.genres.all %} <a href='/catalog/genre/{{ genre.id }}'>{{ genre.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+                {% if film.date_published != "0"%}<p><strong>Выпуск: </strong>{{film.date_published}}</p>{% endif %}
+                {% if film.origin_source != "0"%}<p><strong>Первоисточник: </strong> {{film.origin_source }}</p>{% endif %}
+                {% if film.studio != "0"%}<p><strong>Студия: </strong>{{ film.studio }}</p>{% endif %}
+                {% if film.duration != "0"%}<p><strong>Длительность: </strong> {{ film.duration }}</p>{% endif %}
+                <button class='list-button' id='list-button'>Добавить в список</button>
+                <ul class="dropdown-list">
+                    <li class='dropdown-item'>Список 1</li>
+                    <li>Список 2</li>
+                    <li>Список 3</li>
+                    <li>Список 4</li>
+                    <li>Список 5</li>
+                    <li>Список 6</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class='anime-description-title' style='margin-left: 350px'>
+        <p> Описание </p>
+    </div>
+    <div class="about">
+        <div class='about-text'>
+            <p> {{ film.description }}</p>
+        </div>
+    </div>
+
+    {% if additional_images %}
+    <div class='anime-description-title' style='margin-left: 350px; margin-top: 30px'>
+        <p> Кадры </p>
+    </div>
+    <div class="additional-images-container">
+        <div class="block">
+            {% for img in additional_images %}
+                <img src='{{ img.image.url }}'>
             {% endfor %}
-            <div class="anime-info">
-                <p><strong>Тип: </strong>{{ anime.anime_type }}</p>
-                <p><strong>Жанр: </strong>{% for genre in anime.genres.all %} <a href='/catalog/genre/{{ genre.id }}'>{{ genre.name }}</a> / {% endfor %}</p>
-                <p><strong>Выпуск: </strong>{{anime.date_published}}</p>
-                <p><strong>Первоисточник: </strong> {{anime.origin_source }}</p>
-                <p><strong>Студия: </strong>{{ anime.studio }}</p>
-                <p><strong>Длительность: </strong> {{ anime.duration }}</p>
-            </div>
         </div>
     </div>
-    <div class="description" style="margin-top: 30px;">
-        <div class="anime-title" >Описание</div>
-        <div class="anime-info">
-            <p>{{ anime.description }}</p>
-        </div>
-    </div>
-    <div class="description" style="margin-top: 30px; background-color: #29292c">
-        <div class="anime-title" style='color: white'>Смотреть онлайн</div>
-        <div id="container">
+    {% endif %}
+
+
+    <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Смотреть онлайн</div>
+    <div class="player-block">
+        <div id="container" style='background-color: #202020'>
             <div id="playerContainer">
-                <iframe id="myIframe" src="{{ anime.link }}" width=840 height=515 frameborder="0" allowfullscreen></iframe>
+                <center>
+                    <iframe id="myIframe" src="{{ link }}" width=840 height=515 frameborder="0" allowfullscreen></iframe>
+                </center>
             </div>
-        
-            <div id="buttonsContainer" style='margin-left: 10px'>
-                <div class="anime-info" style='color: white;'>
-                    <p>Плеер</p>
+        </div>
+    </div>
+    <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Коментарии</div>
+        <div class="comments-container">
+            <div class='comments-block'>
+                <div class='comment-author-data'>
+                    <div class='comment-author-image'>
+                        <img src='{% static 'images/drstone.png'%}'>
+                    </div>
+                    <div class='comment-author'>
+                        <p>Автор коментария</p>
+                    </div>
+                    <div class='comment-date-time'>
+                        <p>12.08.23, 16:54</p>
+                    </div>
                 </div>
-                {% if anime.anilibria_link == "0" %}
-                <button type="button" style='background-color: black; color: white' title="Плеер Kodik, есть возможность выбора озвучки" class="btn btn-secondary" onclick="switchIframeSource('//kodik.info/seria/595021/e75505bc0445f2b51dfd80c3aa2b052a/720p', true)">Kodik</button>
-                {% else %}
-                <button type="button" style='background-color: black; color: white' title="Плеер Kodik, есть возможность выбора озвучки" class="btn btn-secondary" onclick="switchIframeSource('//kodik.info/seria/595021/e75505bc0445f2b51dfd80c3aa2b052a/720p', true)">Kodik</button>
-                <button type="button" style='background-color: black; color: white' title="Плеер Anilibria, есть возможность менять серии, озвучка от Anilibria" class="btn btn-secondary" onclick="switchIframeSource('{{ anime.anilibria_link }}', false)">Anilibria</button>
-                {% endif %}
+                <div class='comment-text'>
+                    <p> ТЕКСТ текст Текст </p>
+                </div>
             </div>
+            <div class="comments-block-answer">
+                <div class='comment-author-data'>
+                    <div class='comment-author-image'>
+                        <img src='{% static 'images/drstone.png'%}'>
+                    </div>
+                    <div class='comment-author'>
+                        <p>Автор ответа</p>
+                    </div>
+                    <div class='comment-date-time'>
+                        <p>12.08.23, 16:59</p>
+                    </div>
+                </div>
+                <div class='comment-text'>
+                    <p> Пошел нахуй </p>
+                </div>
+            </div>
+            <div class='comments-block'>
+                <div class='comment-author-data'>
+                    <div class='comment-author-image'>
+                        <img src='{% static 'images/drstone.png'%}'>
+                    </div>
+                    <div class='comment-author'>
+                        <p>Автор коментария</p>
+                    </div>
+                    <div class='comment-date-time'>
+                        <p>12.08.23, 16:54</p>
+                    </div>
+                </div>
+                <div class='comment-text'>
+                    <p> ТЕКСТ текст Текст </p>
+                </div>
+            </div>
+            <div class="comments-block-answer">
+                <div class='comment-author-data'>
+                    <div class='comment-author-image'>
+                        <img src='{% static 'images/drstone.png'%}'>
+                    </div>
+                    <div class='comment-author'>
+                        <p>Автор ответа</p>
+                    </div>
+                    <div class='comment-date-time'>
+                        <p>12.08.23, 16:59</p>
+                    </div>
+                </div>
+                <div class='comment-text'>
+                    <p> Пошел нахуй </p>
+                </div>
+            </div>
+            <div class='comments-block'>
+                <div class='comment-author-data'>
+                    <div class='comment-author-image'>
+                        <img src='{% static 'images/drstone.png'%}'>
+                    </div>
+                    <div class='comment-author'>
+                        <p>Автор коментария</p>
+                    </div>
+                    <div class='comment-date-time'>
+                        <p>12.08.23, 16:54</p>
+                    </div>
+                </div>
+                <div class='comment-text'>
+                    <p> ТЕКСТ текст Текст </p>
+                </div>
+            </div>
+            
         </div>
     </div>
-    
-    <div class="description" style="margin-top: 30px">
-        <div class="anime-title">Коментарии</div>
-        <div class="anime-info">
-            <p>123</p>
-        </div>
-    </div>
+</div>
     
     <script>
-        function switchIframeSource(newSrc, showSeriesSelect) {
-            var iframe = document.getElementById("myIframe");
-            iframe.src = newSrc;
-    
-            var selectSeriesDiv = document.getElementById("selectSeries");
-            selectSeriesDiv.style.display = showSeriesSelect ? "block" : "none";
-        }
-    
-        function changeSeries(selectedSeries) {
-            switchIframeSource(selectedSeries, true);
-        }
+        document.addEventListener('click', function (e) {
+            var dropdownList = document.querySelector('.dropdown-list');
+            var listButton = document.getElementById('list-button');
+        
+            if (!listButton.contains(e.target) && !dropdownList.contains(e.target)) {
+                dropdownList.style.display = 'none';
+            }
+        });
+        
+        document.getElementById('list-button').addEventListener('click', function () {
+            var dropdownList = document.querySelector('.dropdown-list');
+            dropdownList.style.display = (dropdownList.style.display === 'block') ? 'none' : 'block';
+        });
     </script>
 {% endblock content %}
