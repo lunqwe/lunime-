@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.utils import timezone
-
+from user_page.models import CustomUser
     
 class Genre(models.Model):
     name = models.CharField(max_length=100)
@@ -73,3 +73,5 @@ class AdditionalFilmImage(models.Model):
 class AdditionalName(models.Model):
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    
+    

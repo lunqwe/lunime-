@@ -65,18 +65,23 @@
                     <iframe id="myIframe" src="{{ link.kodik_link }}" width=840 height=515 frameborder="0" allowfullscreen></iframe>
                 </center>
             </div>
-            <div id="buttonsContainer" style='margin-left: 300px; display: flex; align-items: center;'>
+            <div id="buttonsContainer" style='margin-left: 385px; display: flex; align-items: center;'>
                 <div class='episode-selector' id="episodeSelector" style="flex-grow: 1;">
                     <button class="prev-button" onclick="prevPage()"><</button>
                     {% for episode in episodes %}
-                        <button type="button" class="btn btn-secondary episode-button" onclick="changeSeries('{{ episode.kodik_link }}')">{{ episode.n_episode }}</button>
+                        <button type="button" class="btn btn-secondary episode-button" onclick="changeSeries('{{ episode.kodik_link }}', this)">{{ episode.n_episode }}</button>
                     {% endfor %}
                     <button class="next-button" onclick="nextPage()">></button>
                 </div>
-            </div>
+                <div id="selectSeries"></div> <!-- Добавленный элемент с идентификатором 'selectSeries' -->
+            </div>         
         </div>
     </div>
     <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Коментарии</div>
+        <div class='create-comment'>
+            <input placeholder="Напишите коментарий" type="text"></input>
+            <button>></button>
+        </div>
         <div class="comments-container">
             <div class='comments-block'>
                 <div class='comment-author-data'>
@@ -163,33 +168,54 @@
     </div>
 </div>
     
-    <script>
-        function switchIframeSource(newSrc, showSeriesSelect) {
-            var iframe = document.getElementById("myIframe");
+<script>
+    function switchIframeSource(newSrc, showSeriesSelect, clickedButton) {
+        var iframe = document.getElementById("myIframe");
+        if (iframe) {
             iframe.src = newSrc;
-    
-            var selectSeriesDiv = document.getElementById("selectSeries");
-            selectSeriesDiv.style.display = showSeriesSelect ? "block" : "none";
-        }
-    
-        function changeSeries(selectedSeries) {
-            switchIframeSource(selectedSeries, true);
+        } else {
+            console.error("Не удалось найти элемент 'myIframe'.");
+            return;
         }
 
-        document.addEventListener('click', function (e) {
-            var dropdownList = document.querySelector('.dropdown-list');
-            var listButton = document.getElementById('list-button');
-        
-            if (!listButton.contains(e.target) && !dropdownList.contains(e.target)) {
-                dropdownList.style.display = 'none';
-            }
+        var selectSeriesDiv = document.getElementById("selectSeries");
+        if (selectSeriesDiv) {
+            selectSeriesDiv.style.display = showSeriesSelect ? "block" : "none";
+        } else {
+            console.error("Не удалось найти элемент 'selectSeries'.");
+            return;
+        }
+
+        // Удаляем класс 'active' у всех кнопок
+        var episodeButtons = document.querySelectorAll('.episode-button');
+        episodeButtons.forEach(function(button) {
+            button.classList.remove('active');
         });
-        
-        document.getElementById('list-button').addEventListener('click', function () {
-            var dropdownList = document.querySelector('.dropdown-list');
-            dropdownList.style.display = (dropdownList.style.display === 'block') ? 'none' : 'block';
-        });
-    </script>
+
+        // Добавляем класс 'active' к текущей кнопке
+        if (clickedButton) {
+            clickedButton.classList.add('active');
+        }
+    }
+
+    function changeSeries(selectedSeries, button) {
+        switchIframeSource(selectedSeries, true, button);
+    }
+
+    document.addEventListener('click', function (e) {
+        var dropdownList = document.querySelector('.dropdown-list');
+        var listButton = document.getElementById('list-button');
+
+        if (!listButton.contains(e.target) && !dropdownList.contains(e.target)) {
+            dropdownList.style.display = 'none';
+        }
+    });
+
+    document.getElementById('list-button').addEventListener('click', function () {
+        var dropdownList = document.querySelector('.dropdown-list');
+        dropdownList.style.display = (dropdownList.style.display === 'block') ? 'none' : 'block';
+    });
+</script>
     <script>
         var itemsPerPage = 5; // Количество элементов на одной странице
         var currentPage = parseInt(getCookie("currentPage")) || 1; // Текущая страница

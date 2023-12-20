@@ -1,8 +1,147 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Профиль {{ user.username }}{% endblock title %}
+{% block title %}Профиль {{ profile_owner.username }}{% endblock title %}
+{% block css %} <link rel="stylesheet" href="{% static "css/user_page/user_page.css" %}" type="text/css"/> {% endblock css %}
 {% block content %}
-<h1 style='font-weight: bold'>{{ user.username }}</h1>
-<img src = {{ user.profile_pic.url }}>
-<p> {{ user.username }} </p>
+<div class='background-banner' id="background-image">
+    <img src='{{ profile_owner.profile_pic.url }}'>
+</div>
+
+<div class="profile-container">
+    <img class="profile-pic" src='{{ profile_owner.profile_pic.url }}'>
+    <div class='profile-description'>
+        <h2 class="profile-name"> {{ profile_owner.username }} </h2>
+        <p class="description-text"> {{ profile_owner.profile_description }} </p>
+    </div>
+    <div class='side-container'>
+        <div class='side-buttons'>
+            <button> <img src="{% static 'images\list-icon.png' %}"> </button>
+            <button> <img src="{% static 'images\edit-icon.png' %}"> </button>
+        </div>
+        <div class='statistics'>
+            <p class='profile-name'> Статистика</h2>
+            <p class='description-text'>Просмотрено аниме: 1235</p>
+            <p class='description-text'>Любимые жанры: Драма, Сёнен, Триллер</p>
+            <p class='description-text'>Лайков на подборках: 9898</p>
+        </div>
+    </div>
+</div>
+<div class='profile-details'>
+    <h2 class="profile-name"> Топ аниме пользователя </h2>
+    <ul class="products">
+        {% for anime in anime_list %}
+            <li class="genre">
+                <a href="/anime/{{ anime.id }}">
+                    <div class="thumbnail">
+                        <img src="{{ anime.image.url }}" alt="{{ anime.title }}">
+                    </div>
+                    <div class="caption">
+                        <p>
+                            {% if anime.title|length > 20 %}
+                            {{ anime.title|slice:":20" }}...
+                            {% else %}
+                            {{ anime.title }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <h2 class="profile-name"> Подборки пользователя </h2>
+    <ul class="products">
+        {% for anime in film_list %}
+            <li class="genre">
+                <a href="/anime/{{ anime.id }}">
+                    <div class="thumbnail">
+                        <img src="{{ anime.image.url }}" alt="{{ anime.title }}">
+                    </div>
+                    <div class="caption">
+                        <p>
+                            {% if anime.title|length > 20 %}
+                            {{ anime.title|slice:":20" }}...
+                            {% else %}
+                            {{ anime.title }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class='profile-name'>Коментарии профиля</div>
+    <div class='comment'>
+            <div class='create-comment'>
+                <input placeholder="Напишите коментарий" type="text"></input>
+                <button>></button>
+            </div>
+            <div class="comments-container">
+                <div class='comments-block'>
+                    <div class='comment-author-data'>
+                        <div class='comment-author-image'>
+                            <img src='{% static 'images/drstone.png'%}'>
+                        </div>
+                        <div class='comment-author'>
+                            <p>Автор коментария</p>
+                        </div>
+                        <div class='comment-date-time'>
+                            <p>12.08.23, 16:54</p>
+                        </div>
+                    </div>
+                    <div class='comment-text'>
+                        <p> ТЕКСТ текст Текст </p>
+                    </div>
+                </div>
+                <div class='comments-block'>
+                    <div class='comment-author-data'>
+                        <div class='comment-author-image'>
+                            <img src='{% static 'images/drstone.png'%}'>
+                        </div>
+                        <div class='comment-author'>
+                            <p>Автор коментария</p>
+                        </div>
+                        <div class='comment-date-time'>
+                            <p>12.08.23, 16:54</p>
+                        </div>
+                    </div>
+                    <div class='comment-text'>
+                        <p> ТЕКСТ текст Текст </p>
+                    </div>
+                </div>
+                <div class="comments-block-answer">
+                    <div class='comment-author-data'>
+                        <div class='comment-author-image'>
+                            <img src='{% static 'images/drstone.png'%}'>
+                        </div>
+                        <div class='comment-author'>
+                            <p>Автор ответа</p>
+                        </div>
+                        <div class='comment-date-time'>
+                            <p>12.08.23, 16:59</p>
+                        </div>
+                    </div>
+                    <div class='comment-text'>
+                        <p> Пошел нахуй </p>
+                    </div>
+                </div>
+                <div class='comments-block'>
+                    <div class='comment-author-data'>
+                        <div class='comment-author-image'>
+                            <img src='{% static 'images/drstone.png'%}'>
+                        </div>
+                        <div class='comment-author'>
+                            <p>Автор коментария</p>
+                        </div>
+                        <div class='comment-date-time'>
+                            <p>12.08.23, 16:54</p>
+                        </div>
+                    </div>
+                    <div class='comment-text'>
+                        <p> ТЕКСТ текст Текст </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

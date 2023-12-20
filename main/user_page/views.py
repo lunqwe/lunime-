@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
@@ -7,6 +7,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.contrib.auth import login
+from animepage.models import Anime, Film
+from .models import CustomUser
 
 
 class CustomLoginView(LoginView):
@@ -38,6 +40,18 @@ class SignupView(CreateView):
         # Добавьте следующую строку для редиректа
         return redirect(self.success_url)
 
-@login_required(login_url='/login')
-def user_page(request):
-    return render(request, 'user/user_page.html')
+def user_page(request, username):
+    # Получаем объект пользователя по его имени пользователя
+    user = get_object_or_404(CustomUser, username=username)
+
+    # Загружаем данные для профиля пользователя
+    anime = Anime.objects.all()[:5]
+    films = Film.objects.all()[:3]
+    
+    context = {
+        "profile_owner": user,  # Предположим, что у пользователя есть модель профиля
+        "anime_list": anime,
+        "film_list": films,
+    }
+
+    return render(request, 'user/user_page.html', context)
