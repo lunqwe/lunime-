@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Списки пользователя {{ lists_owner.username }} {% endblock title %}
+{% block css %}<link rel="stylesheet" href="{% static "css/user_page/lists.css" %}" type="text/css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">{% endblock css %}
+{% block content %}
+<h1 style='color: white'>Списки пользователя {{ lists_owner.username }}</h1>
+<div class='list-main-container'>
+    <ul class='list-container' id='first-list'>
+        {% for list in lists %}
+            <li class='list-item show-related' data-index="{{ forloop.counter0 }}">{{ list.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <ul class='list-container' id='second-list' style='width: 80%'>
+        {% for list in lists %}
+            <li class='related-item' data-index="{{ forloop.counter0 }}">
+                {% if list.anime.all %}
+                {% for anime in list.anime.all %}
+                    <div class='display-item' id="anime-{{anime.id}}">
+                        <div class='item-details'>
+                            <a {% if anime.temp_type == "Anime" %} href='/anime/{{ anime.id }}' {% else %} href="/anime/film/{{ anime.id }}" {% endif %}>
+                                <img src="{{ anime.image.url }}" alt="Image">
+                                {{ anime.title }}
+                            </a>
+                        </div>
+                        {% if request.user == lists_owner %}
+                        <button class="delete-button" onclick="deleteAnimeFromList('{{ user.username }}', '{{ list.id }}', '{{ anime.id }}')"><img class='delete-button-img' src="{% static "images/trashcan-icon.png"%}" alt="Image"></button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% else %}
+                <p> Список пуст. </p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var relatedItems = document.querySelectorAll('.related-item');
+
+        // Скрыть все элементы второго списка
+        relatedItems.forEach(function (item) {
+            item.style.display = 'none';
+        });
+
+        // Показать первый элемент второго списка
+        relatedItems[0].style.display = 'block';
+
+        var firstListItems = document.querySelectorAll('#first-list .list-item');
+
+        firstListItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+                var index = this.getAttribute('data-index');
+
+                // Скрыть все элементы второго списка
+                relatedItems.forEach(function (item) {
+                    item.style.display = 'none';
+                });
+
+                // Показать соответствующий элемент второго списка
+                relatedItems[index].style.display = 'block';
+            });
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script>
+    function deleteAnimeFromList(username, listId, animeId) {
+        // Отправка AJAX-запроса на сервер
+        fetch("{% url 'delete_from_list' list_id=0 anime_id=0 %}".replace('0', listId).replace('0', animeId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            credentials: 'same-origin',
+        })
+        .then(response => response.json())
+        .then(data => {
+            toastr.success(data.message);
+            
+            // Удаление блока с карточкой аниме после успешного удаления
+            const animeCard = document.getElementById(`anime-${animeId}`);
+            if (animeCard) {
+                animeCard.remove();
+            }
+    
+            // Дополнительные действия после удаления (при необходимости)
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Произошла ошибка при удалении аниме из списка.');
+        });
+    }
+    
+    // Функция для получения значения CSRF-токена из куки
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    </script>
+{% endblock content %}

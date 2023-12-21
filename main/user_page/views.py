@@ -8,7 +8,9 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from animepage.models import Anime, Film
-from .models import CustomUser
+from .models import CustomUser, UserList
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 
 class CustomLoginView(LoginView):
@@ -55,3 +57,40 @@ def user_page(request, username):
     }
 
     return render(request, 'user/user_page.html', context)
+
+def lists(request, username):
+    user = get_object_or_404(CustomUser, username=username)
+    
+    lists = UserList.objects.filter(user=user)
+    
+    context = {
+        "lists_owner": user,
+        "lists": lists
+    }
+    
+    return render(request, 'user/lists.html', context)
+
+
+
+@require_POST
+def delete_from_list(request, list_id, anime_id):
+    user = request.user
+    user_list = UserList.objects.get(user=user, id=list_id)
+    anime = Anime.objects.get(id=anime_id)
+        
+    user_list.anime.remove(anime)
+        
+    return JsonResponse({'message': 'Аниме удалено из списка!'})
+
+
+@require_POST
+def add_to_list(request, list_id, anime_id):
+    
+    user = request.user
+    user_list = UserList.objects.get(user=user, id=list_id)
+    anime = Anime.objects.get(id=anime_id)
+        
+    user_list.anime.add(anime)
+    
+    return JsonResponse({'message': 'Аниме успешно добавлено в список!'})
+    

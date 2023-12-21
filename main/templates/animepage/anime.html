@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %} {{ anime.title }} {% endblock title %}
-{% block css %}<link rel="stylesheet" href="{% static "css/animepage/animepage.css" %}" type="text/css"/>{% endblock css %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/animepage/animepage.css" %}" type="text/css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+{% endblock css %}
 {% block content %}
 <div class='background-banner' id="background-image">
     <img src='{{ anime.image.url }}'>
@@ -26,12 +29,9 @@
                 <p><strong>Длительность: </strong> {{ anime.duration }}</p>
                 <button class='list-button' id='list-button'>Добавить в список</button>
                 <ul class="dropdown-list">
-                    <li class='dropdown-item'>Список 1</li>
-                    <li>Список 2</li>
-                    <li>Список 3</li>
-                    <li>Список 4</li>
-                    <li>Список 5</li>
-                    <li>Список 6</li>
+                    {% for list in user_lists %}
+                    <button class="dropdown-item" onclick="addAnimeToList('{{ user.username }}', '{{ list.id }}', '{{ anime.id }}')">{{ list.name }}</button>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
@@ -339,4 +339,42 @@
     displayEpisodes(currentPage);
     setupPagination();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script>
+    function addAnimeToList(username, listId, animeId) {
+        // Отправка AJAX-запроса на сервер
+        fetch("{% url 'add_to_list' list_id=0 anime_id=0 %}".replace('0', listId).replace('0', animeId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            credentials: 'same-origin',
+        })
+        .then(response => response.json())
+        .then(data => {
+            toastr.success(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Произошла ошибка при удалении аниме из списка.');
+        });
+    }
+    
+    // Функция для получения значения CSRF-токена из куки
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    </script>
 {% endblock content %}

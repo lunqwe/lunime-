@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 # Create your models here.
 
 class CustomUser(AbstractUser):
@@ -10,7 +11,6 @@ class CustomUser(AbstractUser):
     
     def __str__(self):
         return f'{self.id} - {self.username}'
-    
 
 class UserList(models.Model):
     name = models.CharField(max_length=350, default='Неопознаный список')
@@ -20,8 +20,17 @@ class UserList(models.Model):
     def __str__(self):
         return f'{self.user.username} - "{self.name}"'
     
+    
+@receiver(post_save, sender=CustomUser)
+def create_lists_for_new_user(sender, instance, created, **kwargs):
+    if created:
+        # Создаем три списка для нового пользователя
+        UserList.objects.create(user=instance, name='Смотрю')
+        UserList.objects.create(user=instance, name='Просмотрено')
+        UserList.objects.create(user=instance, name='Запланировано')
+    
 class Rating(models.Model):
-    anime = models.ForeignKey('animepage.Anime', on_delete=models.CASCADE)
+    anime = models.ForeignKey('animepage.Anime', on_delete=models.CASCADE, default='0')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     mark = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     

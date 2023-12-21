@@ -171,3 +171,6 @@ MESSAGE_TAGS = {
 # sessions
 
 AUTH_USER_MODEL = 'user_page.CustomUser'
+
+CSRF_COOKIE_SECURE = True  # Установите в True, если используется HTTPS
+CSRF_COOKIE_SAMESITE = 'Lax'  # Или 'Strict' для повышенной безопасности

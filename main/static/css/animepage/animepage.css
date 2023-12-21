@@ -343,3 +343,16 @@
     background-color: #464646; /* Цвет фона при активации (можете изменить) */
     color: #fff; /* Цвет текста при активации (можете изменить) */
 }
+
+.dropdown-item{
+    background-color: #202020;
+    border-radius: 5px;
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 5px;
+}
+
+.dropdown-item:active{
+    transform: scale(1.05);
+    margin-bottom: 10px;
+}
