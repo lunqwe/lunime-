@@ -2,15 +2,16 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ChangeUsernameForm
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from animepage.models import Anime, Film
-from .models import CustomUser, UserList
+from .models import CustomUser, UserList, Selection
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.db import IntegrityError
 
 
 class CustomLoginView(LoginView):
@@ -94,3 +95,26 @@ def add_to_list(request, list_id, anime_id):
     
     return JsonResponse({'message': 'Аниме успешно добавлено в список!'})
     
+@login_required
+def change_profile(request, username):
+    user = request.user
+    
+    selection = Selection.objects.filter(user=user)
+    
+    context = {
+        "selection" : selection,
+    }
+    
+    return render(request, 'user/change_profile.html', context)
+
+
+@require_POST
+def change_nickname(request, new_name):
+    user = request.user
+    try:
+        # Попытка установить новый никнейм
+        user.username = new_name
+        user.save()
+        return JsonResponse({'message': 'Имя пользователя успешно изменено!'})
+    except IntegrityError:
+        return JsonResponse({'message': 'Имя пользователя занято.', 'type': 'error'})

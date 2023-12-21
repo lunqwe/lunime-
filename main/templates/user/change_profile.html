@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Настройки профиля {% endblock title %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/user_page/change_profile.css" %}" type="text/css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+{% endblock css%}
+{% block content %}
+<h1 style='color: white'>Настройки профиля {{ lists_owner.username }}</h1>
+<div class='list-main-container'>
+    <ul class='list-container' id='first-list'>
+        <li class='list-item show-related'>Основные настройки</li>
+        <li class='list-item show-related'>Топ аниме и подборки</li>
+    </ul>
+
+    <ul class='list-container' id='first-list'>
+        <li class='list-item show-related'>
+            <input id="new-nickname-input" placeholder="Введите новое имя пользователя" type="text">
+            <button onclick="changeNickname(document.getElementById('new-nickname-input').value)">Изменить никнейм</button>
+        </li>
+        <li class='list-item show-related'>Топ аниме и подборки</li>
+    </ul>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function changeNickname(new_name) {
+            // Отправка AJAX-запроса на сервер
+            fetch("{% url 'change_nickname' new_name=0 %}".replace('0', new_name), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                credentials: 'same-origin',
+            })
+            .then(response => response.json())
+            .then(data => {
+                toastr.success(data.message);
+        
+                // Дополнительные действия после удаления (при необходимости)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при удалении аниме из списка.');
+            });
+        }
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+{% endblock content %}
