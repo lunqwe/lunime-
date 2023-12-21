@@ -169,38 +169,49 @@
 </div>
     
 <script>
-    function switchIframeSource(newSrc, showSeriesSelect, clickedButton) {
-        var iframe = document.getElementById("myIframe");
-        if (iframe) {
-            iframe.src = newSrc;
-        } else {
-            console.error("Не удалось найти элемент 'myIframe'.");
-            return;
-        }
-
-        var selectSeriesDiv = document.getElementById("selectSeries");
-        if (selectSeriesDiv) {
-            selectSeriesDiv.style.display = showSeriesSelect ? "block" : "none";
-        } else {
-            console.error("Не удалось найти элемент 'selectSeries'.");
-            return;
-        }
-
-        // Удаляем класс 'active' у всех кнопок
-        var episodeButtons = document.querySelectorAll('.episode-button');
-        episodeButtons.forEach(function(button) {
-            button.classList.remove('active');
-        });
-
-        // Добавляем класс 'active' к текущей кнопке
-        if (clickedButton) {
-            clickedButton.classList.add('active');
-        }
-    }
-
-    function changeSeries(selectedSeries, button) {
-        switchIframeSource(selectedSeries, true, button);
-    }
+        function getAnimeCookieKey(animeId) {
+            return "currentPage_" + animeId;
+        };
+    
+        function switchIframeSource(newSrc, showSeriesSelect, clickedButton, animeId) {
+            var iframe = document.getElementById("myIframe");
+            if (iframe) {
+                iframe.src = newSrc;
+            } else {
+                console.error("Не удалось найти элемент 'myIframe'.");
+                return;
+            }
+    
+            var selectSeriesDiv = document.getElementById("selectSeries");
+            if (selectSeriesDiv) {
+                selectSeriesDiv.style.display = showSeriesSelect ? "block" : "none";
+            } else {
+                console.error("Не удалось найти элемент 'selectSeries'.");
+                return;
+            }
+    
+            // Удаляем класс 'active' у всех кнопок
+            var episodeButtons = document.querySelectorAll('.episode-button');
+            episodeButtons.forEach(function(button) {
+                button.classList.remove('active');
+            });
+    
+            // Добавляем класс 'active' к текущей кнопке
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+    
+            // Получаем уникальный ключ куки для текущего аниме
+            var cookieKey = getAnimeCookieKey(animeId);
+    
+            // Сохраняем текущую страницу в cookies с использованием уникального ключа
+            setCookie(cookieKey, currentPage, 365);
+        };
+    
+        // Добавляем параметр animeId в функцию changeSeries
+        function changeSeries(selectedSeries, button, animeId) {
+            switchIframeSource(selectedSeries, true, button, animeId);
+        };
 
     document.addEventListener('click', function (e) {
         var dropdownList = document.querySelector('.dropdown-list');
@@ -216,112 +227,116 @@
         dropdownList.style.display = (dropdownList.style.display === 'block') ? 'none' : 'block';
     });
 </script>
-    <script>
-        var itemsPerPage = 5; // Количество элементов на одной странице
-        var currentPage = parseInt(getCookie("currentPage")) || 1; // Текущая страница
-      
-        function displayEpisodes(currentPage) {
-          var episodeSelector = document.getElementById("episodeSelector");
-          var episodes = episodeSelector.getElementsByClassName("btn");
-      
-          var start = (currentPage - 1) * itemsPerPage;
-          var end = start + itemsPerPage;
-      
-          for (var i = 0; i < episodes.length; i++) {
-            episodes[i].style.display = i >= start && i < end ? "inline-block" : "none";
-          }
-      
-          document.getElementById("currentPage").innerHTML = currentPage;
-        }
-      
-        function prevPage() {
-          if (currentPage > 1) {
-            currentPage--;
-            setCookie("currentPage", currentPage, 365); // Сохраняем текущую страницу в cookies
-            displayEpisodes(currentPage);
-            highlightCurrentPage();
-          }
-        }
-      
-        function nextPage() {
-          var episodeSelector = document.getElementById("episodeSelector");
-          var episodes = episodeSelector.getElementsByClassName("btn");
-          var totalPages = Math.ceil(episodes.length / itemsPerPage);
-      
-          if (currentPage < totalPages) {
-            currentPage++;
-            setCookie("currentPage", currentPage, 365); // Сохраняем текущую страницу в cookies
-            displayEpisodes(currentPage);
-            highlightCurrentPage();
-          }
-        }
-      
-        function setupPagination() {
-          var episodeSelector = document.getElementById("episodeSelector");
-          var episodes = episodeSelector.getElementsByClassName("btn");
-          var totalPages = Math.ceil(episodes.length / itemsPerPage);
-      
-          var pagination = document.getElementById("pagination");
-          pagination.innerHTML = "";
-      
-          var prevButton = document.createElement("button");
-          prevButton.innerHTML = "Предыдущая";
-          prevButton.onclick = function() {
-            prevPage();
-          };
-          pagination.appendChild(prevButton);
-      
-          var currentPageSpan = document.createElement("span");
-          currentPageSpan.id = "currentPage";
-          currentPageSpan.innerHTML = currentPage;
-          pagination.appendChild(currentPageSpan);
-      
-          var nextButton = document.createElement("button");
-          nextButton.innerHTML = "Следующая";
-          nextButton.onclick = function() {
-            nextPage();
-          };
-          pagination.appendChild(nextButton);
-      
-          highlightCurrentPage();
-        }
-      
-        function highlightCurrentPage() {
-          var pagination = document.getElementById("pagination");
-          var currentPageSpan = document.getElementById("currentPage");
-          var buttons = pagination.getElementsByTagName("button");
-      
-          for (var i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove("active");
-          }
-      
-          buttons[currentPage - 1].classList.add("active");
-          currentPageSpan.innerHTML = currentPage;
-        }
-      
-        function setCookie(name, value, days) {
-          var expires = "";
-          if (days) {
+<script>
+    var itemsPerPage = 5; // Количество элементов на одной странице
+    var animeId = {{ anime.id }}; // Замените на уникальный идентификатор для каждого аниме
+    var currentPage = parseInt(getCookie(getAnimeCookieKey(animeId))) || 1; // Текущая страница
+
+    function getAnimeCookieKey(animeId) {
+        return "currentPage_" + animeId;
+    }
+
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
             var date = new Date();
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
             expires = "; expires=" + date.toUTCString();
-          }
-          document.cookie = name + "=" + value + expires + "; path=/";
         }
-      
-        function getCookie(name) {
-          var nameEQ = name + "=";
-          var ca = document.cookie.split(';');
-          for (var i = 0; i < ca.length; i++) {
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
             while (c.charAt(0) === ' ') c = c.substring(1, c.length);
             if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-          }
-          return null;
         }
-      
-        // Инициализация
-        displayEpisodes(currentPage);
-        setupPagination();
-      </script>
+        return null;
+    }
+
+    function displayEpisodes(currentPage) {
+        var episodeSelector = document.getElementById("episodeSelector");
+        var episodes = episodeSelector.getElementsByClassName("btn");
+
+        var start = (currentPage - 1) * itemsPerPage;
+        var end = start + itemsPerPage;
+
+        for (var i = 0; i < episodes.length; i++) {
+            episodes[i].style.display = i >= start && i < end ? "inline-block" : "none";
+        }
+
+        document.getElementById("currentPage").innerHTML = currentPage;
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            setCookie(getAnimeCookieKey(animeId), currentPage, 365);
+            displayEpisodes(currentPage);
+            highlightCurrentPage();
+        }
+    }
+
+    function nextPage() {
+        var episodeSelector = document.getElementById("episodeSelector");
+        var episodes = episodeSelector.getElementsByClassName("btn");
+        var totalPages = Math.ceil(episodes.length / itemsPerPage);
+
+        if (currentPage < totalPages) {
+            currentPage++;
+            setCookie(getAnimeCookieKey(animeId), currentPage, 365);
+            displayEpisodes(currentPage);
+            highlightCurrentPage();
+        }
+    }
+
+    function setupPagination() {
+        var episodeSelector = document.getElementById("episodeSelector");
+        var episodes = episodeSelector.getElementsByClassName("btn");
+        var totalPages = Math.ceil(episodes.length / itemsPerPage);
+
+        var pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
+
+        var prevButton = document.createElement("button");
+        prevButton.innerHTML = "Предыдущая";
+        prevButton.onclick = function() {
+            prevPage();
+        };
+        pagination.appendChild(prevButton);
+
+        var currentPageSpan = document.createElement("span");
+        currentPageSpan.id = "currentPage";
+        currentPageSpan.innerHTML = currentPage;
+        pagination.appendChild(currentPageSpan);
+
+        var nextButton = document.createElement("button");
+        nextButton.innerHTML = "Следующая";
+        nextButton.onclick = function() {
+            nextPage();
+        };
+        pagination.appendChild(nextButton);
+
+        highlightCurrentPage();
+    }
+
+    function highlightCurrentPage() {
+        var pagination = document.getElementById("pagination");
+        var currentPageSpan = document.getElementById("currentPage");
+        var buttons = pagination.getElementsByTagName("button");
+
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("active");
+        }
+
+        buttons[currentPage - 1].classList.add("active");
+    }
+
+    // Инициализация
+    displayEpisodes(currentPage);
+    setupPagination();
+</script>
 {% endblock content %}
