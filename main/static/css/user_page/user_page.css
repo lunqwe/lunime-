@@ -47,14 +47,19 @@
 
 
 .profile-pic{
-    width: 15%;
-    height: 15%;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
     border-radius: 10px;
 }
 
+.profile-pic img{
+    object-fit: contain;
+}
+
 .profile-description{
     flex-direction: column;
+    width: 30%;
 }
 
 .profile-name{
@@ -65,10 +70,15 @@
     margin-left: 10px;
 }
 
-.description-text{
-    color: whitesmoke;
-    font-size: 20px;
-    margin-left: 15px;
+.description-text {
+    color: silver;
+    margin-left: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 7; /* Определите количество отображаемых строк */
+    -webkit-box-orient: vertical;
+    white-space: normal;
 }
 
 .side-container{

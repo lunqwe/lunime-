@@ -2,13 +2,13 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
-from .forms import CustomUserCreationForm, ChangeUsernameForm
+from .forms import CustomUserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from animepage.models import Anime, Film
-from .models import CustomUser, UserList, Selection
+from .models import CustomUser, UserList, Selection, Comment, Reply
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db import IntegrityError
@@ -43,6 +43,7 @@ class SignupView(CreateView):
         # Добавьте следующую строку для редиректа
         return redirect(self.success_url)
 
+@login_required(login_url='login/')
 def user_page(request, username):
     # Получаем объект пользователя по его имени пользователя
     user = get_object_or_404(CustomUser, username=username)
@@ -59,6 +60,7 @@ def user_page(request, username):
 
     return render(request, 'user/user_page.html', context)
 
+@login_required(login_url='login/')
 def lists(request, username):
     user = get_object_or_404(CustomUser, username=username)
     
@@ -95,7 +97,7 @@ def add_to_list(request, list_id, anime_id):
     
     return JsonResponse({'message': 'Аниме успешно добавлено в список!'})
     
-@login_required
+@login_required(login_url='login/')
 def change_profile(request, username):
     user = request.user
     
@@ -118,3 +120,41 @@ def change_nickname(request, new_name):
         return JsonResponse({'message': 'Имя пользователя успешно изменено!'})
     except IntegrityError:
         return JsonResponse({'message': 'Имя пользователя занято.', 'type': 'error'})
+
+@require_POST    
+def change_description(request, new_description):
+    user = request.user
+    user.profile_description = new_description
+    user.save()
+    return JsonResponse({'message': 'Описание успешно изменено!'})
+
+@require_POST
+def change_profile_picture(request):
+    new_image = request.FILES.get('new_image')
+    user = request.user
+    user.profile_pic = new_image
+    user.save()
+    return JsonResponse({'message': 'Изображение профиля успешно изменено!'})
+
+
+@require_POST
+def create_comment(request, anime_id, text):
+    comment = Comment.objects.create(
+        author = request.user,
+        text = text,
+        anime = Anime.objects.filter(id=anime_id)[0]
+    )
+    
+    if comment:
+        return JsonResponse({'message':'Комментарий добавлен!'})
+
+@require_POST
+def create_reply(request, comment_id, text):
+    reply = Reply.objects.create(
+        author = request.user,
+        text = text,
+        comment = Comment.objects.filter(id=comment_id)[0]
+    )
+    
+    if reply:
+        return JsonResponse({'message':"Коментарий добавлен!"})

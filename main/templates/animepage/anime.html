@@ -27,7 +27,11 @@
                 <p><strong>Первоисточник: </strong> {{anime.origin_source }}</p>
                 <p><strong>Студия: </strong>{{ anime.studio }}</p>
                 <p><strong>Длительность: </strong> {{ anime.duration }}</p>
+                {% if user.is_authenticated%}
                 <button class='list-button' id='list-button'>Добавить в список</button>
+                {% else %}
+                <a href="/login/"><button class='list-button'>Добавить в список</button></a>
+                {% endif %}
                 <ul class="dropdown-list">
                     {% for list in user_lists %}
                     <button class="dropdown-item" onclick="addAnimeToList('{{ user.username }}', '{{ list.id }}', '{{ anime.id }}')">{{ list.name }}</button>
@@ -79,96 +83,75 @@
     </div>
     <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Коментарии</div>
         <div class='create-comment'>
-            <input placeholder="Напишите коментарий" type="text"></input>
-            <button>></button>
+            <input id="comment-input" placeholder="Напишите комментарий" type="text">
+            <button class="next-button" onclick="create('{{anime.id}}')">></button>
         </div>
         <div class="comments-container">
+            {% for comment in comments %}
             <div class='comments-block'>
                 <div class='comment-author-data'>
                     <div class='comment-author-image'>
-                        <img src='{% static 'images/drstone.png'%}'>
+                        <img src='{{ comment.author.profile_pic.url}}'>
                     </div>
                     <div class='comment-author'>
-                        <p>Автор коментария</p>
+                        <p>{{ comment.author.username }}</p>
                     </div>
                     <div class='comment-date-time'>
-                        <p>12.08.23, 16:54</p>
+                        <p>{{ comment.date_created }}</p>
                     </div>
                 </div>
                 <div class='comment-text'>
-                    <p> ТЕКСТ текст Текст </p>
+                    <p> {{ comment.text }}</p>
                 </div>
+                <button class="next-button" onclick="toggleAnswerInput('{{ comment.id }}')">Ответить</button>
+                <input id="comment-input-{{ comment.id }}" class="hidden" style='color: black' placeholder="Напишите комментарий" type="text">
+                <button id="comment-btn-{{ comment.id }}" class="next-button hidden" onclick="answer('{{ comment.id }}')">></button>
             </div>
+            {% for reply in comment.reply_set.all %}
             <div class="comments-block-answer">
                 <div class='comment-author-data'>
                     <div class='comment-author-image'>
-                        <img src='{% static 'images/drstone.png'%}'>
+                        <img src='{{ reply.author.profile_pic.url }}'>
                     </div>
                     <div class='comment-author'>
-                        <p>Автор ответа</p>
+                        <p>{{ reply.author.username }}</p>
                     </div>
                     <div class='comment-date-time'>
-                        <p>12.08.23, 16:59</p>
+                        <p>{{ reply.date_created }}</p>
                     </div>
                 </div>
                 <div class='comment-text'>
-                    <p> Пошел нахуй </p>
+                    <p> {{ reply.text }} </p>
                 </div>
             </div>
-            <div class='comments-block'>
-                <div class='comment-author-data'>
-                    <div class='comment-author-image'>
-                        <img src='{% static 'images/drstone.png'%}'>
-                    </div>
-                    <div class='comment-author'>
-                        <p>Автор коментария</p>
-                    </div>
-                    <div class='comment-date-time'>
-                        <p>12.08.23, 16:54</p>
-                    </div>
-                </div>
-                <div class='comment-text'>
-                    <p> ТЕКСТ текст Текст </p>
-                </div>
-            </div>
-            <div class="comments-block-answer">
-                <div class='comment-author-data'>
-                    <div class='comment-author-image'>
-                        <img src='{% static 'images/drstone.png'%}'>
-                    </div>
-                    <div class='comment-author'>
-                        <p>Автор ответа</p>
-                    </div>
-                    <div class='comment-date-time'>
-                        <p>12.08.23, 16:59</p>
-                    </div>
-                </div>
-                <div class='comment-text'>
-                    <p> Пошел нахуй </p>
-                </div>
-            </div>
-            <div class='comments-block'>
-                <div class='comment-author-data'>
-                    <div class='comment-author-image'>
-                        <img src='{% static 'images/drstone.png'%}'>
-                    </div>
-                    <div class='comment-author'>
-                        <p>Автор коментария</p>
-                    </div>
-                    <div class='comment-date-time'>
-                        <p>12.08.23, 16:54</p>
-                    </div>
-                </div>
-                <div class='comment-text'>
-                    <p> ТЕКСТ текст Текст </p>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-</div>
-    
+            {% endfor %}
+        {% endfor %}
 <script>
+    
+    function toggleAnswerInput(commentId) {
+        var commentInput = document.getElementById('comment-input-' + commentId);
+        var commentBtn = document.getElementById('comment-btn-' + commentId);
+    
+        commentInput.classList.toggle('hidden');
+        commentBtn.classList.toggle('hidden');
+    }
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+
         function getAnimeCookieKey(animeId) {
             return "currentPage_" + animeId;
         };
@@ -360,21 +343,71 @@
             alert('Произошла ошибка при удалении аниме из списка.');
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем флаг в localStorage
+        if (localStorage.getItem('commentCreated') === 'true') {
+            // Удаляем флаг
+            localStorage.removeItem('nameChanged');
+    
+            // Отображаем сообщение
+            toastr.success("Коментарий создан!");
+        }
+
+    });
+
+    function create(anime_id) {
+        var commentText = document.getElementById('comment-input').value;
+        if (commentText){
+            fetch("{% url 'create_comment' text=0 anime_id=0 %}".replace('0', commentText).replace('0', anime_id), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                credentials: 'same-origin',
+            })
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('commentCreated', 'true');
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                toastr.error('Ошибка создания коментария');
+            });
+        }
+        else{
+            toastr.error('Текст коментария не может быть пустым')
+        }
+    }
+
+    function answer(comment_id) {
+        var commentText = document.getElementById('comment-input' +'-'+ comment_id).value;
+        if (commentText){
+            fetch("{% url 'create_reply' text=0 comment_id=0 %}".replace('0', commentText).replace('0', comment_id), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                credentials: 'same-origin',
+            })
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('commentCreated', 'true');
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                toastr.error('Ошибка создания коментария');
+            });
+        }
+        else{
+            toastr.error('Текст коментария не может быть пустым')
+        }
+    }
     
     // Функция для получения значения CSRF-токена из куки
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.startsWith(name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
     </script>
 {% endblock content %}

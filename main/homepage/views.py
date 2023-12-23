@@ -42,7 +42,6 @@ def get_anime(request):
     order_by_param = request.GET.get('order_by', 'title')
     selected_genres = request.GET.getlist('selectedGenres[]', [])
     selected_types = request.GET.getlist('selectedTypes[]', []) # получения значений фильтрации типов
-    print(selected_types)
     
     if selected_genres:
         anime = Anime.objects.filter(genres__id__in=selected_genres).annotate(genre_count=Count('genres')).filter(genre_count=len(selected_genres))

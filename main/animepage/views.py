@@ -2,7 +2,7 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404
 from .models import Anime, Episode, AdditionalName, Genre, Film, AdditionalImage, AdditionalFilmImage
 from .services import open_file
-from user_page.models import UserList
+from user_page.models import UserList, Comment 
 
 
 def get_list_video(request):
@@ -15,7 +15,12 @@ def get_anime(request, pk: int):
     kodik_link = episodes[0]
     additional_names = AdditionalName.objects.filter(anime=anime)
     additional_images = AdditionalImage.objects.filter(anime=anime)
-    user_lists = UserList.objects.filter(user=request.user)
+    if request.user.is_anonymous:
+        user_lists = []
+    else: 
+        user_lists = UserList.objects.filter(user=request.user)
+    
+    comments = Comment.objects.filter(anime=anime).order_by('date_created').reverse()
     
     context = {
         "anime": anime,
@@ -24,6 +29,7 @@ def get_anime(request, pk: int):
         "additional_names": additional_names,
         "additional_images": additional_images,
         "user_lists": user_lists,
+        "comments": comments,
     }
     
     return render(request, "animepage/anime.html", context)

@@ -16,7 +16,9 @@
     <div class='side-container'>
         <div class='side-buttons'>
             <a href="list/"><button> <img src="{% static 'images\list-icon.png' %}"> </button></a>
+            {% if profile_owner == user%}
             <a href="change-profile/"><button> <img src="{% static 'images\edit-icon.png' %}"> </button></a>
+            {% endif %}
             {% if user.is_superuser and profile_owner == user %}
             <a href="/admin"><button> <img src="{% static 'images\admin-icon.png' %}"> </button></a>
             {% endif %}

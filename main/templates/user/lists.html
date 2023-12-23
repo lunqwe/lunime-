@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Списки пользователя {{ lists_owner.username }} {% endblock title %}
-{% block css %}<link rel="stylesheet" href="{% static "css/user_page/lists.css" %}" type="text/css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">{% endblock css %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/user_page/lists.css" %}" type="text/css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+{% endblock css %}
 {% block content %}
-<h1 style='color: white'>Списки пользователя {{ lists_owner.username }}</h1>
+<h1 class='profile-name'>Списки пользователя {{ lists_owner.username }}</h1>
 <div class='list-main-container'>
     <ul class='list-container' id='first-list'>
         {% for list in lists %}

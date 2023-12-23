@@ -1,0 +1,121 @@
+.list-main-container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin-top: 50px;
+    color: white;
+    display: flex;
+}
+
+#first-list {
+    list-style-type: none;
+    padding: 0;
+    margin-right: 20px;
+    margin-top: 5px
+}
+
+#first-list .list-item {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #555;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#first-list .list-item:hover {
+    background-color: #777;
+}
+
+#second-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#second-list .related-item {
+    display: none;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    display: flex;
+}
+
+#second-list .related-item img {
+    width: 70px; /* Установите желаемую ширину изображения */
+    margin-right: 10px;
+}
+
+.related-item a{
+    color: white;
+}
+
+
+.related-item {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.action-button {
+    background-color: #2c2c2c;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    background-color: #3c3c3c;
+}
+
+.form {
+    margin-top: 10px;
+}
+
+.file-input {
+    display: none;
+}
+
+.p {
+    color: #fff;
+}
+
+#new-nickname-input,
+#new-description-input {
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+#new-nickname-input:focus,
+#new-description-input:focus {
+    outline: none;
+    border-color: #555;
+}
+
+.related-item2 {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.related-item2 p {
+    margin: 0;
+}
+
+
+.profile-name{
+    
+    color: white;
+    font-size: 35px;
+    font-weight: 600;
+    margin-left: 10px;
+    margin-left: 10%;
+}

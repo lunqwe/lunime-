@@ -54,5 +54,15 @@ class Comment(models.Model):
     film = models.ForeignKey('animepage.Film', on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
-        return f'{self.anime} - {self.user.username} - {self.id}'
+        return f'{self.anime} - {self.author.username} - {self.id}'
+    
+class Reply(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    text = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f'{self.comment.id} - {self.author.username} - {self.id}'
+    
 

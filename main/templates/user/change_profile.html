@@ -8,25 +8,137 @@
 {% block content %}
 <h1 style='color: white'>Настройки профиля {{ lists_owner.username }}</h1>
 <div class='list-main-container'>
-    <ul class='list-container' id='first-list'>
-        <li class='list-item show-related'>Основные настройки</li>
-        <li class='list-item show-related'>Топ аниме и подборки</li>
+    <ul class='list-container-main' id='first-list'>
+        <li class="list-item show-related" onclick="showBlock('second-list')">Настройки профиля</li>
+        <li class="list-item show-related" onclick="showBlock('third-list')">Топ аниме и подборки</li>
     </ul>
 
-    <ul class='list-container' id='first-list'>
-        <li class='list-item show-related'>
-            <input id="new-nickname-input" placeholder="Введите новое имя пользователя" type="text">
-            <button onclick="changeNickname(document.getElementById('new-nickname-input').value)">Изменить никнейм</button>
+    {% comment %} блок 1 {% endcomment %}
+    <ul class='list-container' id='second-list' style='width: 80%; display: none;'>
+        <li class="related-item">
+            <img src="{{ user.profile_pic.url }}">
+            <button class="action-button" onclick="toggleChangeImageForm()">></button>
+            <form class="form" id="profilePicForm" enctype="multipart/form-data" style='display: none;'>
+                <input class="file-input" type="file" name="profile_pic" id="profilePicInput" accept="image/*">
+                <button class="action-button" type="button" onclick="changeProfilePic()">Изменить изображение профиля</button>
+            </form>
         </li>
-        <li class='list-item show-related'>Топ аниме и подборки</li>
+        <li class="related-item">
+            <button class="action-button" onclick="toggleChangeNicknameForm()">></button>
+            <p style='color: white'> Имя пользователя: {{ user.username }}</p>
+            <form id="changeNicknameForm" style="display: none;">
+                <input id="new-nickname-input" placeholder="Введите новое имя пользователя" type="text" style='color: black'>
+                <button class="action-button" onclick="changeNickname(document.getElementById('new-nickname-input').value)">Применить</button>
+            </form>
+        </li>
+        <li class="related-item2">
+            <button class="action-button" onclick="toggleChangeDescriptionForm()">></button>
+            <p style='color: white'> Описание: {{ user.profile_description }}</p>
+            <form id="changeDescriptionForm" style="display: none;">
+                <input id="new-description-input" placeholder="Введите описание" type="text" style='color: black'>
+                <button class="action-button" onclick="changeDescription(document.getElementById('new-description-input').value)">Изменить описание</button>
+            </form>
+        </li>
     </ul>
 
+    {% comment %} блок 2 {% endcomment %}
+    <ul class="list-container" id='third-list' style='display: none;'>
+        <li class="list-item">12</li>
+        <li class="list-item">23</li>
+    </ul>
 </div>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
+
+
+        function toggleChangeNicknameForm() {
+            var form = document.getElementById('changeNicknameForm');
+            var text = document.querySelector('.related-item p')
+            if (text && form) {
+                if (form.style.display === 'none' || form.style.display === '') {
+                    // Если форма скрыта, показать ее и скрыть текст и кнопку
+                    text.style.display = 'none';
+                    form.style.display = 'block';
+                } else {
+                    // Если форма видна, скрыть ее и показать текст и кнопку
+                    text.style.display = 'block';
+                    form.style.display = 'none';
+                }
+            }
+        }
+
+
+        function toggleChangeDescriptionForm() {
+            var form = document.getElementById('changeDescriptionForm');
+            var text = document.querySelector('.related-item2 p')
+            if (text && form) {
+                if (form.style.display === 'none' || form.style.display === '') {
+                    // Если форма скрыта, показать ее и скрыть текст и кнопку
+                    text.style.display = 'none';
+                    form.style.display = 'block';
+                } else {
+                    // Если форма видна, скрыть ее и показать текст и кнопку
+                    text.style.display = 'block';
+                    form.style.display = 'none';
+                }
+            }
+        }
+
+        function toggleChangeImageForm() {
+            var form = document.getElementById('profilePicForm');
+            if (form) {
+                if (form.style.display === 'none' || form.style.display === '') {
+                    // Если форма скрыта, показать ее и скрыть текст и кнопку
+                    form.style.display = 'block';
+                } else {
+                    // Если форма видна, скрыть ее и показать текст и кнопку
+                    form.style.display = 'none';
+                }
+            }
+        }
+
+
+        showBlock('second-list');
+
+        function showBlock(blockId) {
+            // Скрыть все блоки
+            var allBlocks = document.querySelectorAll('.list-container');
+            allBlocks.forEach(function (block) {
+                block.style.display = 'none';
+            });
+
+            // Показать выбранный блок
+            var selectedBlock = document.querySelector(`#${blockId}`);
+            if (selectedBlock) {
+                selectedBlock.style.display = 'block';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            // Проверяем флаг в localStorage
+            if (localStorage.getItem('nameChanged') === 'true') {
+                // Удаляем флаг
+                localStorage.removeItem('nameChanged');
+        
+                // Отображаем сообщение
+                toastr.success("Имя пользователя успешно изменено!");
+            }
+            if (localStorage.getItem('descriptionChanged') === 'true') {
+                // Удаляем флаг
+                localStorage.removeItem('descriptionChanged');
+        
+                // Отображаем сообщение
+                toastr.success("Описание успешно изменено!");
+            }
+
+            if (localStorage.getItem('profileImageChanged') === 'true') {
+                localStorage.removeItem('profileImageChanged');
+                toastr.success('Изображение профиля успешно изменено!')
+            }
+        });
+    
         function changeNickname(new_name) {
             // Отправка AJAX-запроса на сервер
             fetch("{% url 'change_nickname' new_name=0 %}".replace('0', new_name), {
@@ -39,7 +151,9 @@
             })
             .then(response => response.json())
             .then(data => {
-                toastr.success(data.message);
+                localStorage.setItem('nameChanged', 'true');
+
+                location.reload();
         
                 // Дополнительные действия после удаления (при необходимости)
             })
@@ -48,6 +162,59 @@
                 alert('Произошла ошибка при удалении аниме из списка.');
             });
         }
+
+        function changeDescription(new_description) {
+            // Отправка AJAX-запроса на сервер
+            fetch("{% url 'change_description' new_description=0 %}".replace('0', new_description), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                credentials: 'same-origin',
+            })
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('descriptionChanged', 'true');
+
+                location.reload();
+        
+                // Дополнительные действия после удаления (при необходимости)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при удалении аниме из списка.');
+            });
+        }
+
+        function changeProfilePic() {
+            var fileInput = document.getElementById('profilePicInput');
+            
+            if (fileInput.files.length > 0) {
+                var formData = new FormData();
+                formData.append('new_image', fileInput.files[0]);
+        
+                // Отправка POST-запроса с использованием Fetch API
+                fetch("{% url 'change_profile_picture'%}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'), // Замените на ваш CSRF-токен
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    localStorage.setItem('profileImageChanged', 'true');
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                });
+            } else {
+                console.error('Выберите изображение для загрузки.');
+            }
+        }
+
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {

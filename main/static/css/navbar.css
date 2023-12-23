@@ -1,10 +1,10 @@
-#navbar{
+#navbar {
   position: relative;
   background-color: linear-gradient(to top, rgba(0, 0, 0, 0.8));
   border: none;
 }
 
-.btn-rounded{
+.btn-rounded {
   background-color: #4b4b4b;
   border: none;
   color: white;
@@ -17,8 +17,8 @@
   border-radius: 50%;
 }
 
-.menu-btn{
-  color:var(--eer-black)
+.menu-btn {
+  color: var(--eer-black);
 }
 
 .btn-link {
@@ -29,69 +29,13 @@
   outline: none;
   color: black;
 }
-.btn-link:hover{
+
+.btn-link:hover {
   outline: none;
   text-decoration: none;
   color: black;
 }
 
-/* button {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  background-color: transparent;
-  border: 0.125em solid #1A1A1A;
-  border-radius: 0.9375em;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  color: #3B3B3B;
-  cursor: pointer;
-  display: inline-block;
-  font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
-  font-size: 16px;
-  font-weight: 600;
-  line-height: normal;
-  margin: 0;
-  min-height: 3.75em;
-  min-width: 0;
-  outline: none;
-  padding: 1em 2.3em;
-  text-align: center;
-  text-decoration: none;
-  -webkit-transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
-  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
-  -moz-user-select: none;
-   -ms-user-select: none;
-       user-select: none;
-  -webkit-user-select: none;
-  -ms-touch-action: manipulation;
-      touch-action: manipulation;
-  will-change: transform;
- }
- 
- button:disabled {
-  pointer-events: none;
- }
- 
- button:hover {
-  color: #fff;
-  background-color: #1A1A1A;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-          box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-  -webkit-transform: translateY(-2px);
-      -ms-transform: translateY(-2px);
-          transform: translateY(-2px);
- }
- 
- button:active {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-  -webkit-transform: translateY(0);
-      -ms-transform: translateY(0);
-          transform: translateY(0);
- } */
-
-/* hover effect on button width */
 .Btn {
   --black: #000000;
   --ch-black: #141414;
@@ -168,14 +112,14 @@
 /* button click effect*/
 .Btn:active {
   outline: none;
-  transform: translate(2px ,2px);
+  transform: translate(2px, 2px);
 }
 
-a.Btn-a{
+a.Btn-a {
   outline: none;
   background-color: rgba(0, 0, 0, 0);
 }
-a.Btn-a:hover{
+a.Btn-a:hover {
   outline: none;
   background-color: rgba(0, 0, 0, 0) !important;
 }
@@ -189,7 +133,7 @@ a.Btn-a:hover{
 .mainbox {
   box-sizing: border-box;
   position: relative;
-  width: 200px;
+  width: 100%; /* Изменено с 200px на 100% для адаптивности */
   height: 45px;
   display: flex;
   flex-direction: row-reverse;
@@ -245,7 +189,7 @@ a.Btn-a:hover{
   cursor: pointer;
   appearance: none;
   border: none;
-  outline: none
+  outline: none;
 }
 
 .search_input {
@@ -289,14 +233,12 @@ a.Btn-a:hover{
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  z-index: 1000;  /* Устанавливаем z-index для подсказок, чтобы они отображались поверх всего контента */
-  max-height: 520px; /* Максимальная высота блока подсказок, чтобы ограничить его размер */
+  z-index: 1000;
+  max-height: 520px;
   width: 350px;
-  overflow-y: auto; /* Добавляем прокрутку, если блок подсказок выходит за пределы максимальной высоты */
-  
-  /* Позиционирование блока справа от поля ввода */
+  overflow-y: auto;
   top: 50px;
-  left: calc(0% - 150px);  /* Расстояние от правого края поля ввода */
+  left: calc(0% - 150px);
 }
 
 .suggestion-item {
