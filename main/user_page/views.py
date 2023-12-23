@@ -47,6 +47,7 @@ class SignupView(CreateView):
 def user_page(request, username):
     # Получаем объект пользователя по его имени пользователя
     user = get_object_or_404(CustomUser, username=username)
+    comments = Comment.objects.filter(user_id = user.id)
 
     # Загружаем данные для профиля пользователя
     anime = Anime.objects.all()[:5]
@@ -56,6 +57,7 @@ def user_page(request, username):
         "profile_owner": user,  # Предположим, что у пользователя есть модель профиля
         "anime_list": anime,
         "film_list": films,
+        "comments": comments,
     }
 
     return render(request, 'user/user_page.html', context)
@@ -128,6 +130,7 @@ def change_description(request, new_description):
     user.save()
     return JsonResponse({'message': 'Описание успешно изменено!'})
 
+
 @require_POST
 def change_profile_picture(request):
     new_image = request.FILES.get('new_image')
@@ -138,12 +141,26 @@ def change_profile_picture(request):
 
 
 @require_POST
-def create_comment(request, anime_id, text):
-    comment = Comment.objects.create(
+def create_comment(request, comment_type, object_id, text):
+    print(comment_type, object_id, text)
+    if comment_type == "Anime":
+        comment = Comment.objects.create(
         author = request.user,
         text = text,
-        anime = Anime.objects.filter(id=anime_id)[0]
-    )
+        anime = Anime.objects.filter(id=object_id)[0]
+        )
+    elif comment_type == "Film":
+        comment = Comment.objects.create(
+        author = request.user,
+        text = text,
+        film = Film.objects.filter(id=object_id)[0]
+        )
+    elif comment_type == "User":
+        comment = Comment.objects.create(
+        author = request.user,
+        text = text,
+        user_id = object_id
+        )
     
     if comment:
         return JsonResponse({'message':'Комментарий добавлен!'})
@@ -158,3 +175,18 @@ def create_reply(request, comment_id, text):
     
     if reply:
         return JsonResponse({'message':"Коментарий добавлен!"})
+
+
+@require_POST   
+def delete_comment(request, comment_id):
+    comment = Comment.objects.filter(id=comment_id)
+    comment.delete()
+    
+    return JsonResponse({'message': "Коментарий удален"})
+
+@require_POST   
+def delete_reply (request, reply_id):
+    reply = Reply.objects.filter(id=reply_id)
+    reply.delete()
+    
+    return JsonResponse({'message': "Коментарий удален"})

@@ -11,6 +11,8 @@ urlpatterns = [
     path('change-nickname/<str:new_name>/', views.change_nickname, name='change_nickname'),
     path('change-description/<str:new_description>/', views.change_description, name='change_description'),
     path('change_profile_picture/', views.change_profile_picture, name='change_profile_picture'),
-    path('create_comment/<str:text>/<int:anime_id>', views.create_comment, name='create_comment'),
+    path('create_comment/<str:comment_type>/<int:object_id>/<str:text>/', views.create_comment, name='create_comment'),
     path('create_reply/<str:text>/<int:comment_id>', views.create_reply, name='create_reply'),
+    path('delete_comment/<int:comment_id>', views.delete_comment, name='delete_comment'),
+    path('delete_reply/<int:reply_id>', views.delete_reply, name='delete_reply')
 ]

@@ -52,6 +52,7 @@ class Comment(models.Model):
     text = models.TextField()
     anime = models.ForeignKey('animepage.Anime', on_delete=models.CASCADE, null=True, blank=True)
     film = models.ForeignKey('animepage.Film', on_delete=models.CASCADE, null=True, blank=True)
+    user_id = models.IntegerField(null=True, blank=True)
     
     def __str__(self):
         return f'{self.anime} - {self.author.username} - {self.id}'
@@ -65,4 +66,4 @@ class Reply(models.Model):
     def __str__(self):
         return f'{self.comment.id} - {self.author.username} - {self.id}'
     
-
+    

@@ -87,6 +87,7 @@
             <button class="next-button" onclick="create('{{anime.id}}')">></button>
         </div>
         <div class="comments-container">
+            {% if comments %}
             {% for comment in comments %}
             <div class='comments-block'>
                 <div class='comment-author-data'>
@@ -104,6 +105,9 @@
                     <p> {{ comment.text }}</p>
                 </div>
                 <button class="next-button" onclick="toggleAnswerInput('{{ comment.id }}')">Ответить</button>
+                {% if request.user == comment.author %}
+                <button class="next-button" onclick="deleteComment('{{ comment.id }}')">Удалить</button>
+                {% endif %}
                 <input id="comment-input-{{ comment.id }}" class="hidden" style='color: black' placeholder="Напишите комментарий" type="text">
                 <button id="comment-btn-{{ comment.id }}" class="next-button hidden" onclick="answer('{{ comment.id }}')">></button>
             </div>
@@ -124,8 +128,14 @@
                     <p> {{ reply.text }} </p>
                 </div>
             </div>
+            {% if request.user == comment.author %}
+            <button class="next-button" onclick="deleteReply('{{ reply.id }}')">Удалить</button>
+            {% endif %}
             {% endfor %}
         {% endfor %}
+        {% else %}
+        <p> Коментариев нету </p>
+        {% endif %}
 <script>
     
     function toggleAnswerInput(commentId) {
@@ -348,10 +358,13 @@
         // Проверяем флаг в localStorage
         if (localStorage.getItem('commentCreated') === 'true') {
             // Удаляем флаг
-            localStorage.removeItem('nameChanged');
-    
-            // Отображаем сообщение
+            localStorage.removeItem('commentCreated');
             toastr.success("Коментарий создан!");
+        }
+        else if (localStorage.getItem('commentDeleted') === 'true') {
+            // Удаляем флаг
+            localStorage.removeItem('commentDeleted');
+            toastr.success("Коментарий удален!");
         }
 
     });
@@ -359,7 +372,7 @@
     function create(anime_id) {
         var commentText = document.getElementById('comment-input').value;
         if (commentText){
-            fetch("{% url 'create_comment' text=0 anime_id=0 %}".replace('0', commentText).replace('0', anime_id), {
+            fetch("{% url 'create_comment' comment_type='Anime' object_id=0 text=1 %}".replace('0', anime_id).replace('1', commentText), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -407,6 +420,48 @@
             toastr.error('Текст коментария не может быть пустым')
         }
     }
+
+    function deleteComment(comment_id) {
+        fetch("{% url 'delete_comment' comment_id=0 %}".replace('0', comment_id), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        credentials: 'same-origin',
+        })
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem('commentDeleted', 'true');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            toastr.error('Ошибка удаления коментария');
+        });
+    }
+
+    function deleteReply(reply_id) {
+        fetch("{% url 'delete_reply' reply_id=0 %}".replace('0', reply_id), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        credentials: 'same-origin',
+        })
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem('commentDeleted', 'true');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            toastr.error('Ошибка удаления коментария');
+        });
+    }
+
+
     
     // Функция для получения значения CSRF-токена из куки
     </script>
