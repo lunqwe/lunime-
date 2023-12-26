@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from animepage.models import Anime, AdditionalName, Film, Genre
+from animepage.models import Anime, Genre
 from itertools import chain
 from django.core.paginator import Paginator
 from django.http import JsonResponse
@@ -29,8 +29,7 @@ def insertion_sort(objects, selected_genres=None):
 # Create your views here.
 def main(request):
     anime = Anime.objects.all()
-    films = Film.objects.all()
-    combined_objects = list(chain(anime, films))
+    combined_objects = list(anime)
     sorted_objects = insertion_sort(combined_objects)
     novelty_list = sorted_objects[:4]
     genres = Genre.objects.all()
@@ -45,20 +44,15 @@ def get_anime(request):
     
     if selected_genres:
         anime = Anime.objects.filter(genres__id__in=selected_genres).annotate(genre_count=Count('genres')).filter(genre_count=len(selected_genres))
-        films = Film.objects.filter(genres__id__in=selected_genres).annotate(genre_count=Count('genres')).filter(genre_count=len(selected_genres))
     else:
         anime = Anime.objects.all()
-        films = Film.objects.all()
     
     if selected_types:
         anime = anime.filter(anime_type__in=selected_types)
-        films = films.filter(anime_type__in=selected_types)
 
-    combined_objects = list(chain(anime, films))
-    sorted_objects = insertion_sort(combined_objects)
+    sorted_objects = anime
 
     if order_by_param == 'created_at':
-        # Если сортировка по дате, реверсируем список
         sorted_objects = sorted(sorted_objects, key=lambda obj: getattr(obj, order_by_param), reverse=True)
     else:
         sorted_objects = sorted(sorted_objects, key=lambda obj: getattr(obj, order_by_param))
@@ -70,25 +64,25 @@ def get_anime(request):
     except:
         return JsonResponse([], safe=False)
     
-    ongoings = Anime.objects.filter(status='Онгоинг')[:5]
+    ongoings = Anime.objects.filter(anime_type='Онґоїнґ')[:5]
     news = Anime.objects.all().order_by("created_at").reverse()[:5]
 
     anime_data = [{'id': obj.id,
                    'title': obj.title,
                    'description': obj.description,
-                   'image_url': obj.image.url,
+                   'image_url': obj.cover.url,
                    "type": obj.temp_type,
                    "date_published": obj.temp_type,
                    } for obj in page_objects]
     ongoing_data = [{'id': obj.id, 'title': obj.title,
                      'description': obj.description,
-                     'image_url': obj.image.url,
+                     'image_url': obj.cover.url,
                      "type": obj.temp_type,
                      'anitype': obj.anime_type,
                      "episodes": obj.amount_of_episodes} for obj in ongoings]
     news_data = [{'id': obj.id, 'title': obj.title,
                      'description': obj.description,
-                     'image_url': obj.image.url,
+                     'image_url': obj.cover.url,
                      "type": obj.temp_type,
                      'anitype': obj.anime_type,
                      "episodes": obj.amount_of_episodes} for obj in news]
@@ -107,7 +101,6 @@ def search_suggestions(request):
     print(f"Received search query: {query}")
 
     anime_results = Anime.objects.filter(title__icontains=query)
-    film_results = Film.objects.filter(title__icontains=query)
 
     suggestions = []
     for anime in anime_results:
@@ -115,20 +108,11 @@ def search_suggestions(request):
             'id': anime.id,
             'title': anime.title,
             'type': anime.anime_type,
-            'image_url': anime.image.url,
+            'image_url': anime.cover.url,
             'check_type': anime.temp_type
         }
         suggestions.append(suggestion)
     
-    for film in film_results:
-        suggestion = {
-            'id': film.id,
-            'title': film.title,
-            'type': film.anime_type,
-            'image_url': film.image.url,
-            'check_type': film.temp_type,
-        }
-        suggestions.append(suggestion)
         
     print(f"Returning suggestions: {suggestions}")
 
@@ -137,12 +121,10 @@ def search_suggestions(request):
 def search_result(request):
     query = request.GET.get('q', '')
     anime_results = Anime.objects.filter(title__icontains=query)
-    film_results = Film.objects.filter(title__icontains=query)
-    combined_objects = list(chain(anime_results, film_results))
     
     context = {
         'query': query,
-        'results': combined_objects,
+        'results': anime_results,
     }
 
     return render(request, 'catalog/search-result.html', context)

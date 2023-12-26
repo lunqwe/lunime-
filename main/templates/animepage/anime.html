@@ -7,30 +7,28 @@
 {% endblock css %}
 {% block content %}
 <div class='background-banner' id="background-image">
-    <img src='{{ anime.image.url }}'>
+    <img src='{{ anime.cover.url }}'>
 </div>
 <div class='main-container'>
     <div class='anime-container'>
         <div class='anime-banner'>
-            <img src='{{ anime.image.url }}'>
+            <img src='{{ anime.cover.url }}'>
         </div>
         <div class='anime-description'>
             <div class='anime-description-title'>
                 <p> {{ anime.title }} </p>
+                <p class='text-muted anime-description-text' style="color: silver"> {{ anime.original_title }} </p>
             </div>
             <div class="anime-description-text">
                 <p><strong>Тип: </strong>{{ anime.anime_type }}</p> 
-                {% if anime.status != "0"%}<p><strong>Статус: </strong>{% if anime.status == "Онгоинг" %}<a href='/catalog/ongoing/'>{% else %}<a href='/catalog/finished/'>{% endif %}{{ anime.status }}</a></p>{% endif %}
-                <p><strong>Эпизоды: </strong>{{ anime.amount_of_episodes }}</p>
+                <p><strong>Кількість епізодів: </strong>{{ anime.amount_of_episodes }}</p>
                 <p><strong>Жанр: </strong>{% for genre in anime.genres.all %} <a href='/catalog/genre/{{ genre.id }}'>{{ genre.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</p>
-                <p><strong>Выпуск: </strong>{{anime.date_published}}</p>
-                <p><strong>Первоисточник: </strong> {{anime.origin_source }}</p>
-                <p><strong>Студия: </strong>{{ anime.studio }}</p>
-                <p><strong>Длительность: </strong> {{ anime.duration }}</p>
+                <p><strong>Прем'єра: </strong>{{anime.date_published}}</p>
+                <p><strong>Студія: </strong>{{ anime.studio }}</p>
                 {% if user.is_authenticated%}
-                <button class='list-button' id='list-button'>Добавить в список</button>
+                <button class='list-button' id='list-button'>Додати у список</button>
                 {% else %}
-                <a href="/login/"><button class='list-button'>Добавить в список</button></a>
+                <a href="/login/"><button class='list-button'>Додати у список</button></a>
                 {% endif %}
                 <ul class="dropdown-list">
                     {% for list in user_lists %}
@@ -41,7 +39,7 @@
         </div>
     </div>
     <div class='anime-description-title' style='margin-left: 350px'>
-        <p> Описание </p>
+        <p> Опис </p>
     </div>
     <div class="about">
         <div class='about-text'>
@@ -50,7 +48,7 @@
     </div>
 
     <div class='anime-description-title' style='margin-left: 350px; margin-top: 30px'>
-        <p> Кадры </p>
+        <p> Кадри </p>
     </div>
     <div class="additional-images-container">
         <div class="block">
@@ -61,24 +59,14 @@
     </div>
 
 
-    <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Смотреть онлайн</div>
+    <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Дивитися онлайн</div>
     <div class="player-block">
         <div id="container" style='background-color: #202020'>
             <div id="playerContainer">
                 <center>
-                    <iframe id="myIframe" src="{{ link.kodik_link }}" width=840 height=515 frameborder="0" allowfullscreen></iframe>
+                    <iframe id="myIframe" src="{{ anime.player }}" width=840 height=515 frameborder="0" allowfullscreen></iframe>
                 </center>
-            </div>
-            <div id="buttonsContainer" style='margin-left: 385px; display: flex; align-items: center;'>
-                <div class='episode-selector' id="episodeSelector" style="flex-grow: 1;">
-                    <button class="prev-button" onclick="prevPage()"><</button>
-                    {% for episode in episodes %}
-                        <button type="button" class="btn btn-secondary episode-button" onclick="changeSeries('{{ episode.kodik_link }}', this)">{{ episode.n_episode }}</button>
-                    {% endfor %}
-                    <button class="next-button" onclick="nextPage()">></button>
-                </div>
-                <div id="selectSeries"></div> <!-- Добавленный элемент с идентификатором 'selectSeries' -->
-            </div>         
+            </div>       
         </div>
     </div>
     <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Коментарии</div>

@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.contrib.auth import login
-from animepage.models import Anime, Film
+from animepage.models import Anime
 from .models import CustomUser, UserList, Selection, Comment, Reply
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -51,12 +51,10 @@ def user_page(request, username):
 
     # Загружаем данные для профиля пользователя
     anime = Anime.objects.all()[:5]
-    films = Film.objects.all()[:3]
     
     context = {
         "profile_owner": user,  # Предположим, что у пользователя есть модель профиля
         "anime_list": anime,
-        "film_list": films,
         "comments": comments,
     }
 
@@ -148,12 +146,6 @@ def create_comment(request, comment_type, object_id, text):
         author = request.user,
         text = text,
         anime = Anime.objects.filter(id=object_id)[0]
-        )
-    elif comment_type == "Film":
-        comment = Comment.objects.create(
-        author = request.user,
-        text = text,
-        film = Film.objects.filter(id=object_id)[0]
         )
     elif comment_type == "User":
         comment = Comment.objects.create(

@@ -4,7 +4,7 @@
 {% block content %}
 <style>
     #navbar {
-    position: relative; /* Важно: установите позицию навбара как относительную */
+    position: relative;
 }
 
 #background-image {
@@ -25,20 +25,20 @@
 <div class="container-fluid text-center" style="margin-top: 450px; margin-left: 100px">
     <div class="row content">
         <div class="col-sm-8 text-left">
-            <h1 class="display-3" style="color: white; font-weight: bolder">Смотреть аниме</h1>
+            <h1 class="display-3" style="color: white; font-weight: bolder">Дивитися аніме</h1>
             <div class="sorting-container">
                 <div class="sorting-block" style='border-radius: 5%'>
-                    <p style='color: white; margin-top: 5px; margin-right: 5px; font-size: 15px;'>Сортировка по:</p>
+                    <p style='color: white; margin-top: 5px; margin-right: 5px; font-size: 15px;'>Сортування по:</p>
                   <select id="sort-selector" class="form-select" aria-label="Default select example" name="sort">
-                      <option value="title">Имени</option>
-                      <option value="created_at">Дате добавления</option>
+                      <option value="title">Назві</option>
+                      <option value="created_at">Даті виходу на сайті</option>
                   </select>
               </div>
-            <button id="showGenresButton" class="btn btn-secondary" style="margin-left: 700px; margin-top: 10px; color: white; background-color: #202020; height: 45px; width: 140px; font-weight: bold;">Фильтры</button>
+            <button id="showGenresButton" class="btn btn-secondary" style="margin-left: 700px; margin-top: 10px; color: white; background-color: #202020; height: 45px; width: 140px; font-weight: bold;">Фільтри</button>
                 <!-- Список жанров (всплывающий) -->
                 <div id="genresContainer" style="margin-bottom: 400px; margin-left: 795px; position: absolute; background-color: rgba(35,35,35,0.7); color: white; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); height: 300px; width:350px; z-index: 1; border-radius: 5%">
                     <div class='containter' style="height: 90%;">
-                        <label for="genre" style='font-size: 18px'>Жанры:</label>
+                        <label for="genre" style='font-size: 18px'>Жанри:</label>
                         <ul class='list-group' style="height: 100%; overflow-y: auto;">
                             {% for genre in genres %}
                             <li style='background-color: rgba(0,0,0,0); border: none; font-size: 18px'>
@@ -63,11 +63,11 @@
                         <ul class='list-group' style="height: 100%; overflow-y: auto;">
                             <li style='background-color: rgba(0,0,0,0); border: none; font-size: 18px'>
                                 <input type="checkbox" id="series" class="form-check-input" name="typeFilter" value="ТВ Сериал">
-                                <label class="form-check-label" for="series">ТВ-Сериал</label>
+                                <label class="form-check-label" for="series">ТВ-Серіал</label>
                             </li>
                             <li style='background-color: rgba(0,0,0,0); border: none; font-size: 18px'>
                                 <input type="checkbox" id="film" class="form-check-input" name="typeFilter" value="Фильм" onchange="toggleCheck(this)">
-                                <label class="form-check-label" for="film">Фильм</label>
+                                <label class="form-check-label" for="film">Фільм</label>
                             </li>
                             <li style='background-color: rgba(0,0,0,0); border: none; font-size: 18px'>
                                 <input type="checkbox" id="ova" class="form-check-input" name="typeFilter" value="OVA">
@@ -76,10 +76,6 @@
                             <li style='background-color: rgba(0,0,0,0); border: none; font-size: 18px'>
                                 <input type="checkbox" id="special" class="form-check-input" name="typeFilter" value="ONA">
                                 <label class="form-check-label" for="special">ONA</label>
-                            </li>
-                            <li style='background-color: rgba(0,0,0,0); border: none; font-size: 18px'>
-                                <input type="checkbox" id="special" class="form-check-input" name="typeFilter" value="Спешл">
-                                <label class="form-check-label" for="special">Спешл</label>
                             </li>
                         </ul>
                     </div>
@@ -92,14 +88,14 @@
       <div class="col-sm-2 sidenav" style="margin-left: 100px; margin-top: 10px">
         <div style='margin-bottom:50px'>
           <div class="update-block-title" style='height: 37px; margin-bottom: 10px'>
-              <p style='margin-top: 5px; margin-left: 10px; font-size: 18px; font-weight: bold'>Онгоинги</p>
+              <p style='margin-top: 5px; margin-left: 10px; font-size: 18px; font-weight: bold'>Онґоїнґи</p>
           </div>
           <div id='ongoing-list'></div>
         </div>
         
         <div>
           <div class="update-block-title" style='height: 37px; margin-bottom: 10px; margin-top: 10px'>
-            <p style='margin-top: 5px; margin-left: 10px; font-size: 18px; font-weight: bold'>Обновления на сайте</p>
+            <p style='margin-top: 5px; margin-left: 10px; font-size: 18px; font-weight: bold'>Оновлення на сайті</p>
           </div>
           <div id="new-anime-list"></div>
         </div>

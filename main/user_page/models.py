@@ -51,7 +51,6 @@ class Comment(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     anime = models.ForeignKey('animepage.Anime', on_delete=models.CASCADE, null=True, blank=True)
-    film = models.ForeignKey('animepage.Film', on_delete=models.CASCADE, null=True, blank=True)
     user_id = models.IntegerField(null=True, blank=True)
     
     def __str__(self):
