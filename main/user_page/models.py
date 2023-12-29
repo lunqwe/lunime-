@@ -6,14 +6,14 @@ from django.db.models.signals import post_save
 # Create your models here.
 
 class CustomUser(AbstractUser):
-    profile_description = models.CharField(max_length=350, default="Описание отсутствует")
+    profile_description = models.CharField(max_length=350, default="Опис відсутній")
     profile_pic = models.ImageField(upload_to='profile_pics/', default='default_pfpic.png')
     
     def __str__(self):
         return f'{self.id} - {self.username}'
 
 class UserList(models.Model):
-    name = models.CharField(max_length=350, default='Неопознаный список')
+    name = models.CharField(max_length=350, default='Невідомий список')
     anime = models.ManyToManyField("animepage.Anime", blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     
@@ -25,9 +25,9 @@ class UserList(models.Model):
 def create_lists_for_new_user(sender, instance, created, **kwargs):
     if created:
         # Создаем три списка для нового пользователя
-        UserList.objects.create(user=instance, name='Смотрю')
-        UserList.objects.create(user=instance, name='Просмотрено')
-        UserList.objects.create(user=instance, name='Запланировано')
+        UserList.objects.create(user=instance, name='Дивлюсь')
+        UserList.objects.create(user=instance, name='Переглянуто')
+        UserList.objects.create(user=instance, name='Заплановано')
     
 class Rating(models.Model):
     anime = models.ForeignKey('animepage.Anime', on_delete=models.CASCADE, default='0')

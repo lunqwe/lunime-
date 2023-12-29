@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Результаты поиска {% endblock title %}
+{% block title %}Результати пошуку {% endblock title %}
 {% block content %}
-<h1 style='color: white'> Результаты поиска для "{{ query }}" </h1>
+<h1 style='color: white'> Результати пошуку для "{{ query }}" </h1>
 {% for anime in results %}
 <img src = {{ anime.image.url }}>
 <p style='color: white'> {{ anime.title }} </p>

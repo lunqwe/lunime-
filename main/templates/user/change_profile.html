@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} Настройки профиля {% endblock title %}
+{% block title %} Налаштування профілю {% endblock title %}
 {% block css %}
 <link rel="stylesheet" href="{% static "css/user_page/change_profile.css" %}" type="text/css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 {% endblock css%}
 {% block content %}
-<h1 style='color: white'>Настройки профиля {{ lists_owner.username }}</h1>
+<h1 style='color: white'>Налаштування профілю {{ lists_owner.username }}</h1>
 <div class='list-main-container'>
     <ul class='list-container-main' id='first-list'>
-        <li class="list-item show-related" onclick="showBlock('second-list')">Настройки профиля</li>
-        <li class="list-item show-related" onclick="showBlock('third-list')">Топ аниме и подборки</li>
+        <li class="list-item show-related" onclick="showBlock('second-list')">Налаштування профілю</li>
+        <li class="list-item show-related" onclick="showBlock('third-list')">Топ аніме и добірки</li>
     </ul>
 
     {% comment %} блок 1 {% endcomment %}
@@ -20,23 +20,23 @@
             <button class="action-button" onclick="toggleChangeImageForm()">></button>
             <form class="form" id="profilePicForm" enctype="multipart/form-data" style='display: none;'>
                 <input class="file-input" type="file" name="profile_pic" id="profilePicInput" accept="image/*">
-                <button class="action-button" type="button" onclick="changeProfilePic()">Изменить изображение профиля</button>
+                <button class="action-button" type="button" onclick="changeProfilePic()">Змініть аватар користувача</button>
             </form>
         </li>
         <li class="related-item">
             <button class="action-button" onclick="toggleChangeNicknameForm()">></button>
-            <p style='color: white'> Имя пользователя: {{ user.username }}</p>
+            <p style='color: white'> Ім'я користувача: {{ user.username }}</p>
             <form id="changeNicknameForm" style="display: none;">
-                <input id="new-nickname-input" placeholder="Введите новое имя пользователя" type="text" style='color: black'>
-                <button class="action-button" onclick="changeNickname(document.getElementById('new-nickname-input').value)">Применить</button>
+                <input id="new-nickname-input" placeholder="Введіть нове ім'я користувача" type="text" style='color: black'>
+                <button class="action-button" onclick="changeNickname(document.getElementById('new-nickname-input').value)">Підтвердити</button>
             </form>
         </li>
         <li class="related-item2">
             <button class="action-button" onclick="toggleChangeDescriptionForm()">></button>
-            <p style='color: white'> Описание: {{ user.profile_description }}</p>
+            <p style='color: white'> Опис: {{ user.profile_description }}</p>
             <form id="changeDescriptionForm" style="display: none;">
-                <input id="new-description-input" placeholder="Введите описание" type="text" style='color: black'>
-                <button class="action-button" onclick="changeDescription(document.getElementById('new-description-input').value)">Изменить описание</button>
+                <input id="new-description-input" placeholder="Введіть новий опис" type="text" style='color: black'>
+                <button class="action-button" onclick="changeDescription(document.getElementById('new-description-input').value)">Змінити опис</button>
             </form>
         </li>
     </ul>
@@ -126,19 +126,19 @@
                 localStorage.removeItem('nameChanged');
         
                 // Отображаем сообщение
-                toastr.success("Имя пользователя успешно изменено!");
+                toastr.success("Ім'я користувача успішно змінено!");
             }
             if (localStorage.getItem('descriptionChanged') === 'true') {
                 // Удаляем флаг
                 localStorage.removeItem('descriptionChanged');
         
                 // Отображаем сообщение
-                toastr.success("Описание успешно изменено!");
+                toastr.success("Опис успішно змінено!");
             }
 
             if (localStorage.getItem('profileImageChanged') === 'true') {
                 localStorage.removeItem('profileImageChanged');
-                toastr.success('Изображение профиля успешно изменено!')
+                toastr.success('Аватар профілю успішно змінено!')
             }
         });
     

@@ -4,6 +4,7 @@
 {% block css %}
 <link rel="stylesheet" href="{% static "css/animepage/animepage.css" %}" type="text/css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
 {% endblock css %}
 {% block content %}
 <div class='background-banner' id="background-image">
@@ -26,9 +27,9 @@
                 <p><strong>Прем'єра: </strong>{{anime.date_published}}</p>
                 <p><strong>Студія: </strong>{{ anime.studio }}</p>
                 {% if user.is_authenticated%}
-                <button class='list-button' id='list-button'>Додати у список</button>
+                <button class='list-button' id='list-button'>Додати до списку</button>
                 {% else %}
-                <a href="/login/"><button class='list-button'>Додати у список</button></a>
+                <a href="/login/"><button class='list-button'>Додати до списку</button></a>
                 {% endif %}
                 <ul class="dropdown-list">
                     {% for list in user_lists %}
@@ -51,12 +52,17 @@
         <p> Кадри </p>
     </div>
     <div class="additional-images-container">
-        <div class="block">
+        <button class="prev-btn">Previous</button>
+        <div class="slider">
             {% for img in additional_images %}
-                <img src='{{ img.image.url }}'>
+                <div class="slide">
+                    <img src='{{ img.image.url }}'>
+                </div>
             {% endfor %}
         </div>
+        <button class="next-btn">Next</button>
     </div>
+    
 
 
     <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Дивитися онлайн</div>
@@ -69,9 +75,9 @@
             </div>       
         </div>
     </div>
-    <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Коментарии</div>
+    <div class='anime-description-title' style='margin-left: 350px; margin-top: 50px'>Коментарі</div>
         <div class='create-comment'>
-            <input id="comment-input" placeholder="Напишите комментарий" type="text">
+            <input id="comment-input" placeholder="Напишіть коментар" type="text">
             <button class="next-button" onclick="create('{{anime.id}}')">></button>
         </div>
         <div class="comments-container">
@@ -92,11 +98,11 @@
                 <div class='comment-text'>
                     <p> {{ comment.text }}</p>
                 </div>
-                <button class="next-button" onclick="toggleAnswerInput('{{ comment.id }}')">Ответить</button>
+                <button class="next-button" onclick="toggleAnswerInput('{{ comment.id }}')">Відповісти</button>
                 {% if request.user == comment.author %}
-                <button class="next-button" onclick="deleteComment('{{ comment.id }}')">Удалить</button>
+                <button class="next-button" onclick="deleteComment('{{ comment.id }}')">Видалити</button>
                 {% endif %}
-                <input id="comment-input-{{ comment.id }}" class="hidden" style='color: black' placeholder="Напишите комментарий" type="text">
+                <input id="comment-input-{{ comment.id }}" class="hidden" style='color: black' placeholder="Напишіть коментар" type="text">
                 <button id="comment-btn-{{ comment.id }}" class="next-button hidden" onclick="answer('{{ comment.id }}')">></button>
             </div>
             {% for reply in comment.reply_set.all %}
@@ -117,12 +123,12 @@
                 </div>
             </div>
             {% if request.user == comment.author %}
-            <button class="next-button" onclick="deleteReply('{{ reply.id }}')">Удалить</button>
+            <button class="next-button" onclick="deleteReply('{{ reply.id }}')">Видалити</button>
             {% endif %}
             {% endfor %}
         {% endfor %}
         {% else %}
-        <p> Коментариев нету </p>
+        <p> Коментарів до цього аніме немає </p>
         {% endif %}
 <script>
     
@@ -148,51 +154,6 @@
         }
         return cookieValue;
     }
-    
-
-        function getAnimeCookieKey(animeId) {
-            return "currentPage_" + animeId;
-        };
-    
-        function switchIframeSource(newSrc, showSeriesSelect, clickedButton, animeId) {
-            var iframe = document.getElementById("myIframe");
-            if (iframe) {
-                iframe.src = newSrc;
-            } else {
-                console.error("Не удалось найти элемент 'myIframe'.");
-                return;
-            }
-    
-            var selectSeriesDiv = document.getElementById("selectSeries");
-            if (selectSeriesDiv) {
-                selectSeriesDiv.style.display = showSeriesSelect ? "block" : "none";
-            } else {
-                console.error("Не удалось найти элемент 'selectSeries'.");
-                return;
-            }
-    
-            // Удаляем класс 'active' у всех кнопок
-            var episodeButtons = document.querySelectorAll('.episode-button');
-            episodeButtons.forEach(function(button) {
-                button.classList.remove('active');
-            });
-    
-            // Добавляем класс 'active' к текущей кнопке
-            if (clickedButton) {
-                clickedButton.classList.add('active');
-            }
-    
-            // Получаем уникальный ключ куки для текущего аниме
-            var cookieKey = getAnimeCookieKey(animeId);
-    
-            // Сохраняем текущую страницу в cookies с использованием уникального ключа
-            setCookie(cookieKey, currentPage, 365);
-        };
-    
-        // Добавляем параметр animeId в функцию changeSeries
-        function changeSeries(selectedSeries, button, animeId) {
-            switchIframeSource(selectedSeries, true, button, animeId);
-        };
 
     document.addEventListener('click', function (e) {
         var dropdownList = document.querySelector('.dropdown-list');
@@ -208,120 +169,20 @@
         dropdownList.style.display = (dropdownList.style.display === 'block') ? 'none' : 'block';
     });
 </script>
-<script>
-    var itemsPerPage = 5; // Количество элементов на одной странице
-    var animeId = {{ anime.id }}; // Замените на уникальный идентификатор для каждого аниме
-    var currentPage = parseInt(getCookie(getAnimeCookieKey(animeId))) || 1; // Текущая страница
-
-    function getAnimeCookieKey(animeId) {
-        return "currentPage_" + animeId;
-    }
-
-    function setCookie(name, value, days) {
-        var expires = "";
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + value + expires + "; path=/";
-    }
-
-    function getCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
-    }
-
-    function displayEpisodes(currentPage) {
-        var episodeSelector = document.getElementById("episodeSelector");
-        var episodes = episodeSelector.getElementsByClassName("btn");
-
-        var start = (currentPage - 1) * itemsPerPage;
-        var end = start + itemsPerPage;
-
-        for (var i = 0; i < episodes.length; i++) {
-            episodes[i].style.display = i >= start && i < end ? "inline-block" : "none";
-        }
-
-        document.getElementById("currentPage").innerHTML = currentPage;
-    }
-
-    function prevPage() {
-        if (currentPage > 1) {
-            currentPage--;
-            setCookie(getAnimeCookieKey(animeId), currentPage, 365);
-            displayEpisodes(currentPage);
-            highlightCurrentPage();
-        }
-    }
-
-    function nextPage() {
-        var episodeSelector = document.getElementById("episodeSelector");
-        var episodes = episodeSelector.getElementsByClassName("btn");
-        var totalPages = Math.ceil(episodes.length / itemsPerPage);
-
-        if (currentPage < totalPages) {
-            currentPage++;
-            setCookie(getAnimeCookieKey(animeId), currentPage, 365);
-            displayEpisodes(currentPage);
-            highlightCurrentPage();
-        }
-    }
-
-    function setupPagination() {
-        var episodeSelector = document.getElementById("episodeSelector");
-        var episodes = episodeSelector.getElementsByClassName("btn");
-        var totalPages = Math.ceil(episodes.length / itemsPerPage);
-
-        var pagination = document.getElementById("pagination");
-        pagination.innerHTML = "";
-
-        var prevButton = document.createElement("button");
-        prevButton.innerHTML = "Предыдущая";
-        prevButton.onclick = function() {
-            prevPage();
-        };
-        pagination.appendChild(prevButton);
-
-        var currentPageSpan = document.createElement("span");
-        currentPageSpan.id = "currentPage";
-        currentPageSpan.innerHTML = currentPage;
-        pagination.appendChild(currentPageSpan);
-
-        var nextButton = document.createElement("button");
-        nextButton.innerHTML = "Следующая";
-        nextButton.onclick = function() {
-            nextPage();
-        };
-        pagination.appendChild(nextButton);
-
-        highlightCurrentPage();
-    }
-
-    function highlightCurrentPage() {
-        var pagination = document.getElementById("pagination");
-        var currentPageSpan = document.getElementById("currentPage");
-        var buttons = pagination.getElementsByTagName("button");
-
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove("active");
-        }
-
-        buttons[currentPage - 1].classList.add("active");
-    }
-
-    // Инициализация
-    displayEpisodes(currentPage);
-    setupPagination();
-</script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script>
+
+    $(document).ready(function(){
+        $('.slider').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            prevArrow: $('.prev-btn'),
+            nextArrow: $('.next-btn'),
+        });
+    });
+
     function addAnimeToList(username, listId, animeId) {
         // Отправка AJAX-запроса на сервер
         fetch("{% url 'add_to_list' list_id=0 anime_id=0 %}".replace('0', listId).replace('0', animeId), {
@@ -347,12 +208,12 @@
         if (localStorage.getItem('commentCreated') === 'true') {
             // Удаляем флаг
             localStorage.removeItem('commentCreated');
-            toastr.success("Коментарий создан!");
+            toastr.success("Коментар створено!");
         }
         else if (localStorage.getItem('commentDeleted') === 'true') {
             // Удаляем флаг
             localStorage.removeItem('commentDeleted');
-            toastr.success("Коментарий удален!");
+            toastr.success("Коментар видалено");
         }
 
     });
@@ -360,7 +221,7 @@
     function create(anime_id) {
         var commentText = document.getElementById('comment-input').value;
         if (commentText){
-            fetch("{% url 'create_comment' comment_type='Anime' object_id=0 text=1 %}".replace('0', anime_id).replace('1', commentText), {
+            fetch("{% url 'create_comment' comment_type='Anime' object_id=0 text=0 %}".replace('0', anime_id).replace('0', commentText), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -375,7 +236,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                toastr.error('Ошибка создания коментария');
+                toastr.error('Помилка створення коментаря');
             });
         }
         else{
@@ -401,11 +262,11 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                toastr.error('Ошибка создания коментария');
+                toastr.error('Помилка створення коментаря');
             });
         }
         else{
-            toastr.error('Текст коментария не может быть пустым')
+            toastr.error('Текст коментаря не може бути пустим')
         }
     }
 
@@ -425,7 +286,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            toastr.error('Ошибка удаления коментария');
+            toastr.error('Помилка видалення коментаря');
         });
     }
 
@@ -445,7 +306,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            toastr.error('Ошибка удаления коментария');
+            toastr.error('Помилка видалення коментаря');
         });
     }
 

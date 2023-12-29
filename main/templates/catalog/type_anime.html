@@ -4,32 +4,49 @@
 {% block css %}<link rel="stylesheet" href="{% static "css/catalog/genre.css" %}" type="text/css"/>{% endblock css %}
 {% block content %}
 <div class="catalog-block">
-    <h1 class="display-1" style="margin-left: 20%; color: white"> Аніме за жанром {{ genre.name }}</h1>
+    <h1 class="display-1" style="margin-left: 20%; color: white"> {{ display_type }} </h1>
     <div id="anime-list" class="mini-product-container" style='margin-top:20px'></div>
 </div>
 <script>
     var page = 1;
-    var genre = {{ genre.id }};
     var loading = false;
     var order_by = 'title';
+    var typeChosen = '{{ anime_type }}'
+    var typeFilter = [];
+
+    $(document).ready(function () {
+        // Скрываем контейнеры при загрузке страницы
+        $('#genresContainer').hide();
+        $('#typeContainer').hide();
+
+        // Переключаем видимость контейнера с жанрами
+        $('#showGenresButton').click(function () {
+            $('#genresContainer').toggle();
+            $('#typeContainer').toggle();
+        });
+    });
+
+    $('input[name="selectedGenres"]').change(function () {
+        // Очищаем список и загружаем данные заново с учетом выбранных жанров
+        $('#anime-list').empty();
+        page = 1;
+        loadMoreAnime();
+    });
+
+    $('input[name="typeFilter"]').change(function () {
+        // Очищаем список и загружаем данные заново
+        $('#anime-list').empty();
+        page = 1;
+        loadMoreAnime();
+    });
 
     function loadMoreAnime() {
         if (!loading) {
             loading = true;
     
-            // Получаем массив выбранных жанров
-            var selectedGenres = $('input[name="selectedGenres"]:checked').map(function () {
-                return this.value;
-            }).get();
-    
-            // Получаем массив выбранных типов
-            var selectedTypes = $('input[name="typeFilter"]:checked').map(function () {
-                return this.value;
-            }).get();
-    
-            $.ajax({ 
-                url: '/catalog/get_genre/',
-                data: { page: page, genre: genre },
+            $.ajax({
+                url: '{% url "get_type" %}',
+                data: { page: page,  typeChosen: typeChosen },
                 dataType: 'json',
                 success: function (data) {
                     console.log(data.anime_data);
@@ -40,7 +57,7 @@
                             var anime = data.anime_data[i];
                             var imageUrl = anime.image_url ? anime.image_url : '';
                             var itemType = anime.type;
-                            html += `<div class="mini-product-block" id="item${anime.id}">`;
+                            html += `<div class="mini-product-block" id="item${anime.id}" onmouseover="toggleText('item${anime.id}')" onmouseout="toggleDefault('item${anime.id}')">`;
                             html += '<a href="' + (itemType === 'Anime' ? '/anime/' : 'anime/film/') + anime.id + '" style="width: 100%; height: 100%">';
                             html += '<div class="image-container">';
                             html += '<img src="' + imageUrl + '" class="product-image">';
@@ -65,6 +82,7 @@
         }
     }
 
+    // Обработчик изменений в селекторе сортировки
     $('#sort-selector').change(function () {
         // Получаем выбранное значение
         order_by = $(this).val();

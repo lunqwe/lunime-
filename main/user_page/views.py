@@ -27,13 +27,13 @@ class SignupView(CreateView):
         # Проверка уникальности имени пользователя
         username = form.cleaned_data['username']
         if get_user_model().objects.filter(username=username).exists():
-            form.add_error('username', 'Пользователь с таким именем уже зарегистрирован.')
+            form.add_error('username', 'Користувач з таким іменем вже зареєстрований')
             return self.form_invalid(form)
 
         # Проверка уникальности почтового адреса
         email = form.cleaned_data['email']
         if get_user_model().objects.filter(email=email).exists():
-            form.add_error('email', 'Пользователь с такой почтой уже зарегистрирован.')
+            form.add_error('email', 'Користувач з такою поштою вже зареєстрований')
             return self.form_invalid(form)
 
         # Если все проверки прошли успешно, сохраняем форму
@@ -83,7 +83,7 @@ def delete_from_list(request, list_id, anime_id):
         
     user_list.anime.remove(anime)
         
-    return JsonResponse({'message': 'Аниме удалено из списка!'})
+    return JsonResponse({'message': 'Аніме видалено зі списку!'})
 
 
 @require_POST
@@ -95,7 +95,7 @@ def add_to_list(request, list_id, anime_id):
         
     user_list.anime.add(anime)
     
-    return JsonResponse({'message': 'Аниме успешно добавлено в список!'})
+    return JsonResponse({'message': 'Аниме додано в список!'})
     
 @login_required(login_url='login/')
 def change_profile(request, username):
@@ -117,16 +117,16 @@ def change_nickname(request, new_name):
         # Попытка установить новый никнейм
         user.username = new_name
         user.save()
-        return JsonResponse({'message': 'Имя пользователя успешно изменено!'})
+        return JsonResponse({'message': "Им'я користувача успішно змінено!"})
     except IntegrityError:
-        return JsonResponse({'message': 'Имя пользователя занято.', 'type': 'error'})
+        return JsonResponse({'message': "Им'я користувача зайнято.", 'type': 'error'})
 
 @require_POST    
 def change_description(request, new_description):
     user = request.user
     user.profile_description = new_description
     user.save()
-    return JsonResponse({'message': 'Описание успешно изменено!'})
+    return JsonResponse({'message': 'Опис успішно змінено!'})
 
 
 @require_POST
@@ -135,7 +135,7 @@ def change_profile_picture(request):
     user = request.user
     user.profile_pic = new_image
     user.save()
-    return JsonResponse({'message': 'Изображение профиля успешно изменено!'})
+    return JsonResponse({'message': 'Зображення профілю успішно змінено!'})
 
 
 @require_POST
@@ -155,7 +155,7 @@ def create_comment(request, comment_type, object_id, text):
         )
     
     if comment:
-        return JsonResponse({'message':'Комментарий добавлен!'})
+        return JsonResponse({'message':'Коментар додано!'})
 
 @require_POST
 def create_reply(request, comment_id, text):
@@ -166,7 +166,7 @@ def create_reply(request, comment_id, text):
     )
     
     if reply:
-        return JsonResponse({'message':"Коментарий добавлен!"})
+        return JsonResponse({'message':'Коментар додано!'})
 
 
 @require_POST   
@@ -174,11 +174,11 @@ def delete_comment(request, comment_id):
     comment = Comment.objects.filter(id=comment_id)
     comment.delete()
     
-    return JsonResponse({'message': "Коментарий удален"})
+    return JsonResponse({'message': "Коментар видалено"})
 
 @require_POST   
 def delete_reply (request, reply_id):
     reply = Reply.objects.filter(id=reply_id)
     reply.delete()
     
-    return JsonResponse({'message': "Коментарий удален"})
+    return JsonResponse({'message': "Коментар видалено"})

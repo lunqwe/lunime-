@@ -3,11 +3,6 @@ from animepage.models import Anime, Genre
 from itertools import chain
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.core.serializers.json import DjangoJSONEncoder
-import json
-from django.http import JsonResponse
-from django.views import View
-from django.db.models import Q
 from django.db.models import Count
 from django.views.decorators.csrf import csrf_exempt
 
@@ -48,9 +43,11 @@ def get_anime(request):
         anime = Anime.objects.all()
     
     if selected_types:
+        print(selected_types)
         anime = anime.filter(anime_type__in=selected_types)
-
-    sorted_objects = anime
+        sorted_objects = anime
+    else:
+        sorted_objects = Anime.objects.all()
 
     if order_by_param == 'created_at':
         sorted_objects = sorted(sorted_objects, key=lambda obj: getattr(obj, order_by_param), reverse=True)
@@ -94,7 +91,7 @@ def get_anime(request):
     }
     return JsonResponse(context, safe=False)
 
-@csrf_exempt  # Используется только для упрощения примера, рекомендуется использовать CSRF-токены в реальных проектах
+@csrf_exempt
 def search_suggestions(request):
     query = request.GET.get('q', '')
 

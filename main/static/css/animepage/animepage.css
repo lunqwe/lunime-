@@ -69,6 +69,10 @@
     font-size: 30px;
     margin: 0; /* Избегаем внутренних отступов вокруг текста */
     flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    height: 80%;
+    border-radius: 10px;
   }
   
 .anime-description-text {

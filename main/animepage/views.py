@@ -5,8 +5,8 @@ from .services import open_file
 from user_page.models import UserList, Comment 
 
 
-def get_list_video(request):
-    return render(request, 'catalog/catalog.html')
+def anime_view(request):
+    return render(request, 'catalog/type_anime.html')
 
 
 def get_anime(request, pk: int):

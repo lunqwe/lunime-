@@ -8,18 +8,18 @@
         <div class="card">
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
-                <a class="login">Вход</a>
+                <a class="login">Вхід</a>
                 <div class="inputBox" style='margin-top: 30px'>
                     {{ form.username }}
-                    <span class="user">Имя пользователя</span>
+                    <span class="user">Ім'я користувача</span>
                 </div>
                 <div class="inputBox" style='margin-top: 30px'>
                     {{ form.password }}
                     <span>Пароль</span>
                 </div>
-                <button type="submit" class="enter" style='margin-top: 30px'>Вход</button>
+                <button type="submit" class="enter" style='margin-top: 30px'>Вхід</button>
             </form>
-            <p> Нету аккаунта? Создайте <a href='/signup/'>тут</a>!
+            <p> Немає аккаунта? Створіть <a href='/signup/'>тут</a>!
         </div>
     </div>
   </center>

@@ -62,11 +62,11 @@
                         <label for="type" style='font-size: 18px'>Тип:</label>
                         <ul class='list-group' style="height: 100%; overflow-y: auto;">
                             <li style='background-color: rgba(0,0,0,0); border: none; font-size: 18px'>
-                                <input type="checkbox" id="series" class="form-check-input" name="typeFilter" value="ТВ Сериал">
+                                <input type="checkbox" id="series" class="form-check-input" name="typeFilter" value="ТВ-Серіал">
                                 <label class="form-check-label" for="series">ТВ-Серіал</label>
                             </li>
                             <li style='background-color: rgba(0,0,0,0); border: none; font-size: 18px'>
-                                <input type="checkbox" id="film" class="form-check-input" name="typeFilter" value="Фильм" onchange="toggleCheck(this)">
+                                <input type="checkbox" id="film" class="form-check-input" name="typeFilter" value="Фільм" onchange="toggleCheck(this)">ьб
                                 <label class="form-check-label" for="film">Фільм</label>
                             </li>
                             <li style='background-color: rgba(0,0,0,0); border: none; font-size: 18px'>
@@ -257,20 +257,21 @@
     data.forEach(function (item) {
         var imageUrl = item.image_url ? item.image_url : '';
         var itemType = item.type;
-        var href = (itemType === 'Anime' ? '/anime/' : '/anime/film/') + item.id;
+        var href = '/anime/' + item.id;
+        var truncatedTitle = item.title.length > 50 ? item.title.substring(0, 50) + '...' : item.title;
         var html = `
-          <a href='${href}' style="width: 100%; height: 100%">
+        <a href='${href}' style="width: 100%; height: 100%">
             <div class="update-block" style='margin-bottom: 15px'>
                 <div class="additional-image-container" style='margin-top: 10px; margin-left: 10px'>
                     <img src="${imageUrl}">
                 </div>
                 <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
-                    <p style='font-weight: bold'>${item.title}</p>
+                    <p style='font-weight: bold'>${truncatedTitle}</p>
                     <p style='color: #A9A9A9'>Тип: ${item.anitype}</p>
-                    <p style='color: #A9A9A9'>Количество серий: ${item.episodes}</p>
+                    <p style='color: #A9A9A9'>Кількість серій: ${item.episodes}</p>
                 </div>
             </div>
-          </a>
+        </a>
         `;
 
         // Добавляем HTML в блок ongoing-list
@@ -289,6 +290,7 @@
         var imageUrl = item.image_url ? item.image_url : '';
         var itemType = item.type;
         var href = (itemType === 'Anime' ? '/anime/' : '/anime/film/') + item.id;
+        var truncatedTitle = item.title.length > 50 ? item.title.substring(0, 50) + '...' : item.title;
         var html = `
           <a href='${href}' style="width: 100%; height: 100%">
             <div class="update-block" style='margin-bottom: 15px'>
@@ -296,7 +298,7 @@
                     <img src="${imageUrl}">
                 </div>
                 <div class="description-container" style='margin-top: 10px; margin-left: 10px'>
-                    <p style='font-weight: bold'>${item.title}</p>
+                    <p style='font-weight: bold'>${truncatedTitle}</p>
                     <p style='color: #A9A9A9'>Тип: ${item.anitype}</p>
                     <p style='color: #A9A9A9'>Количество серий: ${item.episodes}</p>
                 </div>

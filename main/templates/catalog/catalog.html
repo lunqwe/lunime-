@@ -4,9 +4,9 @@
 {% block css %} <link rel="stylesheet" href="{% static "css/catalog/catalog.css" %}" type="text/css"/>{% endblock %}
 {% block content %}
 <div class="anime-description">
-    <h1 class="display-1">Каталог аниме</h1>
+    <h1 class="display-1">Каталог аніме</h1>
     <div class="catalog-block">
-        <h2 class="display-2">Жанры</h2>
+        <h2 class="display-2">Жанри</h2>
         <ul class="products">
             {% for genre in genres %}
                 <li class="genre">
@@ -29,13 +29,13 @@
             </li>
         </ul>
 
-        <h2 class="display-2">Аниме</h2>
+        <h2 class="display-2">Аніме</h2>
         <ul class="products">
             {% for anime in anime_list %}
                 <li class="genre">
                     <a href="/anime/{{ anime.id }}">
                         <div class="thumbnail">
-                            <img src="{{ anime.image.url }}" alt="{{ anime.title }}">
+                            <img src="{{ anime.cover.url }}" alt="{{ anime.title }}">
                         </div>
                         <div class="caption">
                             <p>
@@ -50,7 +50,7 @@
                 </li>
             {% endfor %}
             <li class="genre-button">
-                <a href='/catalog/genres'>
+                <a href='{% url "type_view" a_type="anime" %}'>
                     <div class="genre-button-text">
                         <p> → </p>
                     </div>
@@ -58,13 +58,13 @@
             </li>
         </ul>
 
-        <h2 class="display-2">Фильмы</h2>
+        <h2 class="display-2">Фільми</h2>
         <ul class="products">
             {% for film in films %}
                 <li class="genre">
-                    <a href='/anime/film/{{ film.id }}'>
+                    <a href='/anime/{{ film.id }}'>
                         <div class="thumbnail">
-                            <img src="{{ film.image.url }}" alt="{{ film.title }}">
+                            <img src="{{ film.cover.url }}" alt="{{ film.title }}">
                         </div>
                         <div class="caption">
                             <p>
@@ -79,7 +79,7 @@
                 </li>
             {% endfor %}
             <li class="genre-button">
-                <a href='/catalog/genres'>
+                <a href='{% url "type_view" a_type="film" %}'>
                     <div class="genre-button-text">
                         <p style='margin-top: 130px'> → </p>
                     </div>
@@ -93,7 +93,7 @@
                 <li class="genre">
                     <a href='/catalog/genre/{{ ova.id }}'>
                         <div class="thumbnail">
-                            <img src="{{ ova.image.url }}" alt="{{ ova.title }}">
+                            <img src="{{ ova.cover.url }}" alt="{{ ova.title }}">
                         </div>
                         <div class="caption">
                             <p>
@@ -108,7 +108,7 @@
                 </li>
             {% endfor %}
             <li class="genre-button">
-                <a href='/catalog/genres'>
+                <a href='{% url "type_view" a_type="ova" %}'>
                     <div class="genre-button-text">
                         <p style='margin-top: 130px'> → </p>
                     </div>
@@ -119,9 +119,9 @@
         <ul class="products">
             {% for ona in ona_list %}
                 <li class="genre">
-                    <a href='/catalog/genre/{{ genre.id }}'>
+                    <a href='/anime/{{ ona.id }}'>
                         <div class="thumbnail">
-                            <img src="{{ ona.image.url }}" alt="{{ ona.title }}">
+                            <img src="{{ ona.cover.url }}" alt="{{ ona.title }}">
                         </div>
                         <div class="caption">
                             <p>
@@ -136,7 +136,7 @@
                 </li>
             {% endfor %}
             <li class="genre-button">
-                <a href='/catalog/genres'>
+                <a href='{% url "type_view" a_type="ona" %}'>
                     <div class="genre-button-text">
                         <p style='margin-top: 130px'> → </p>
                     </div>
@@ -144,40 +144,7 @@
             </li>
         </ul>
 
-        <h2 class="display-2">Спешл</h2>
-        <ul class="products">
-            {% for special in specials_list %}
-                <li class="genre">
-                    {% if special.temp_type == 'Anime'%}
-                    <a href="/anime/{{ special.id }}">
-                    {% elif special.temp_type == 'Film'%}
-                    <a href="/anime/film/{{ special.id }}">
-                    {% endif %}
-                        <div class="thumbnail">
-                            <img src="{{ special.image.url }}" alt="{{ special.title }}">
-                        </div>
-                        <div class="caption">
-                            <p>
-                                {% if special.title|length > 20 %}
-                                  {{ special.title|slice:":20" }}...
-                                {% else %}
-                                  {{ special.title }}
-                                {% endif %}
-                              </p>
-                        </div>
-                    </a>
-                </li>
-            {% endfor %}
-            <li class="genre-button">
-                <a href='/catalog/genres'>
-                    <div class="genre-button-text">
-                        <p style='margin-top: 130px'> → </p>
-                    </div>
-                </a>
-            </li>
-        </ul>
-
-        <h2 class="display-2">Пользовательские подборки</h2>
+        <h2 class="display-2">Користувальницькі добірки</h2>
         <ul class="products">
             {% for genre in genres %}
                 <li class="genre">
@@ -192,7 +159,7 @@
                 </li>
             {% endfor %}
             <li class="genre-button">
-                <a href='/catalog/genres'>
+                <a href='{% url "type_view" a_type="Добірки" %}'>
                     <div class="genre-button-text">
                         <p style='margin-top: 130px'> → </p>
                     </div>

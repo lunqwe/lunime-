@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} Регистрация {% endblock title %}
+{% block title %} Реєстрація {% endblock title %}
 {% block css %} <link rel="stylesheet" href="{% static "css/registration/registration.css" %}" type="text/css"/> {% endblock css %}
 {% block content %}
 {% if messages %}
@@ -15,11 +15,11 @@
     <div class="card">
       <form method="post" action="{% url 'signup' %}">
         {% csrf_token %}
-        <a class="signup" style='margin-top: 30px'>Регистрация</a>
+        <a class="signup" style='margin-top: 30px'>Реєстрація</a>
         
         <div class="inputBox1" style='margin-top: 30px'>
           {{ form.username }}
-          <span class="user">Имя пользователя</span>
+          <span class="user">Ім'я користувача</span>
           {% for error in form.username.errors %}
             <p class="text-danger">{{ error }}</p>
           {% endfor %}  
@@ -27,7 +27,7 @@
         
         <div class="inputBox" style='margin-top: 30px'>
           {{ form.email }}
-          <span class="user">Электронная почта</span>  
+          <span class="user">Електронна пошта</span>  
           {% for error in form.email.errors %}
             <p class="text-danger">{{ error }}</p>
           {% endfor %}  
@@ -43,15 +43,15 @@
         
         <div class="inputBox" style='margin-top: 30px'>
           {{ form.password2 }}
-          <span class="user">Подтвердите пароль</span>
+          <span class="user">Підтвердіть пароль</span>
           {% for error in form.password2.errors %}
             <p class="text-danger">{{ error }}</p>
           {% endfor %} 
         </div>
         
-        <button type="submit" class="enter" style='margin-top: 20px'>Регистрация</button>
+        <button type="submit" class="enter" style='margin-top: 20px'>Зареєструватися</button>
       </form>
-      <p style='margin-bottom: 20px'> Уже есть аккаунт? Войдите <a href='/login/'>тут</a>!
+      <p style='margin-bottom: 20px'> Вже є аккаунт? Зайдіть <a href='/login/'>тут</a>!
     </div>
   </div>
 </center>

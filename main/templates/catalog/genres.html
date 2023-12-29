@@ -1,23 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Жанры{% endblock title %}
+{% block title %}Жанри{% endblock title %}
 {% block css %}<link rel="stylesheet" href="{% static "css/catalog/genres.css" %}" type="text/css"/>{% endblock css %}
 {% block content %}
 <div class="catalog-block">
-    <h1 class="display-1" style="margin-left: 10px">Жанры</h1>
-    <ul class="products">
+    <h1 class="display-1" style="margin-left: 22%; color: white">Жанри</h1>
+    <ul class="mini-product-container">
         {% for genre in genres %}
-        <li class="genre">
+        <div class="mini-product-block">
             <a href='/catalog/genre/{{ genre.id }}'>
-                <div class="thumbnail">
-                    <img src="{{ genre.image.url }}">
+                <div class="image-container">'
+                    <img src="{{ genre.image.url }}" class="product-image">
                 </div>
-                <div class="caption">
-                    <p>{{ genre.name }}</p>
-                </div>
-            </a>
-        </li>
+                <p class="title"> {{ genre.name }}</p>
+           </a>
+        </div>
         {% endfor %}
     </ul>
+    
 </div>
 {% endblock content %}
