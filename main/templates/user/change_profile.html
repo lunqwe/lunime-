@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 {% endblock css%}
 {% block content %}
-<h1 style='color: white'>Налаштування профілю {{ lists_owner.username }}</h1>
+<h1 style='color: white; margin-left: 10%'>Налаштування профілю {{ lists_owner.username }}</h1>
 <div class='list-main-container'>
     <ul class='list-container-main' id='first-list'>
         <li class="list-item show-related" onclick="showBlock('second-list')">Налаштування профілю</li>
@@ -16,11 +16,12 @@
     {% comment %} блок 1 {% endcomment %}
     <ul class='list-container' id='second-list' style='width: 80%; display: none;'>
         <li class="related-item">
-            <img src="{{ user.profile_pic.url }}">
-            <button class="action-button" onclick="toggleChangeImageForm()">></button>
+            <div class="profile-pic-container">
+                <button class="change-button" onclick="toggleChangeImageForm()"><img src="{{ user.profile_pic.url }}" class="profile-pic"></button>
+            </div>
             <form class="form" id="profilePicForm" enctype="multipart/form-data" style='display: none;'>
                 <input class="file-input" type="file" name="profile_pic" id="profilePicInput" accept="image/*">
-                <button class="action-button" type="button" onclick="changeProfilePic()">Змініть аватар користувача</button>
+                <button class="action-button" type="button"  onclick="changeProfilePic('{% url "change_picture" user.username %}')">Змініть аватар користувача</button>
             </form>
         </li>
         <li class="related-item">
@@ -190,7 +191,7 @@
             });
         }
 
-        function changeProfilePic() {
+        function changeProfilePic(url) {
             var fileInput = document.getElementById('profilePicInput');
             
             if (fileInput.files.length > 0) {
@@ -198,7 +199,7 @@
                 formData.append('new_image', fileInput.files[0]);
         
                 // Отправка POST-запроса с использованием Fetch API
-                fetch("{% url 'change_profile_picture'%}", {
+                fetch(url, {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -210,9 +211,6 @@
                     localStorage.setItem('profileImageChanged', 'true');
                     location.reload();
                 })
-                .catch(error => {
-                    console.error('Ошибка:', error);
-                });
             } else {
                 console.error('Выберите изображение для загрузки.');
             }

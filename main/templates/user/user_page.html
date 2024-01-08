@@ -23,12 +23,6 @@
             <a href="/admin"><button> <img src="{% static 'images\admin-icon.png' %}"> </button></a>
             {% endif %}
         </div>
-        <div class='statistics'>
-            <p class='profile-name'> Пустий блок</h2>
-            <p class='description-text'></p>
-            <p class='description-text'></p>
-            <p class='description-text'></p>
-        </div>
     </div>
 </div>
 <div class='profile-details'>
@@ -38,7 +32,7 @@
             <li class="genre">
                 <a href="/anime/{{ anime.id }}">
                     <div class="thumbnail">
-                        <img src="{{ anime.image.url }}" alt="{{ anime.title }}">
+                        <img src="{{ anime.cover.url }}" alt="{{ anime.title }}">
                     </div>
                     <div class="caption">
                         <p>
@@ -59,7 +53,7 @@
             <li class="genre">
                 <a href="/anime/{{ anime.id }}">
                     <div class="thumbnail">
-                        <img src="{{ anime.image.url }}" alt="{{ anime.title }}">
+                        <img src="{{ anime.cover.url }}" alt="{{ anime.title }}">
                     </div>
                     <div class="caption">
                         <p>

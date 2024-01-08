@@ -129,10 +129,9 @@ def change_description(request, new_description):
     return JsonResponse({'message': 'Опис успішно змінено!'})
 
 
-@require_POST
-def change_profile_picture(request):
+def change_pic(request, username):
     new_image = request.FILES.get('new_image')
-    user = request.user
+    user = CustomUser.objects.filter(username=username)[0]
     user.profile_pic = new_image
     user.save()
     return JsonResponse({'message': 'Зображення профілю успішно змінено!'})
@@ -145,7 +144,7 @@ def create_comment(request, comment_type, object_id, text):
         comment = Comment.objects.create(
         author = request.user,
         text = text,
-        anime = Anime.objects.filter(id=object_id)[0]
+        # anime = Anime.objects.filter(id=object_id)
         )
     elif comment_type == "User":
         comment = Comment.objects.create(

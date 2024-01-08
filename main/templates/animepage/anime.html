@@ -98,9 +98,9 @@
                 <div class='comment-text'>
                     <p> {{ comment.text }}</p>
                 </div>
-                <button class="next-button" onclick="toggleAnswerInput('{{ comment.id }}')">Відповісти</button>
+                <button class="next-button" style='width: auto' onclick="toggleAnswerInput('{{ comment.id }}')">Відповісти</button>
                 {% if request.user == comment.author %}
-                <button class="next-button" onclick="deleteComment('{{ comment.id }}')">Видалити</button>
+                <button class="next-button" style='width: auto' onclick="deleteComment('{{ comment.id }}')">Видалити</button>
                 {% endif %}
                 <input id="comment-input-{{ comment.id }}" class="hidden" style='color: black' placeholder="Напишіть коментар" type="text">
                 <button id="comment-btn-{{ comment.id }}" class="next-button hidden" onclick="answer('{{ comment.id }}')">></button>

@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-
+import django_on_heroku as heroku
+heroku.settings(locals())
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,9 +27,8 @@ SECRET_KEY = 'django-insecure-3&7x%y!uhoaua$5b&09-g)zsj_z-8yh*xm&^orj&s=kygq#*$j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['lunime-.herokuapp.com']
 
-CSRF_TRUSTED_ORIGINS = ['https://ee25-46-150-65-71.ngrok-free.app']
 # Application definition
 
 INSTALLED_APPS = [
@@ -102,6 +102,7 @@ DATABASES = {
 }
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -142,7 +143,6 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-import os
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
